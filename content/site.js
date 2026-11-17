@@ -5,7 +5,7 @@
 export const site = {
     name: "Korea Bangladesh Business & Cultural Club",
     shortName: "KBBCC",
-    logo: null, // waiting on vector logo; source raster is /images/brand/logo-source.jpeg
+    logo: { image: "brand-logo" }, // raster cut-out of the official emblem; swap for SVG when the club supplies one
     address: {
         building: "Rupayan Millennium Square",
         line1: "Plot Cha-69, 10th Floor",

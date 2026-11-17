@@ -1,0 +1,118 @@
+// Events collection — mirrors the future MongoDB `events` collection.
+// `status` is set by the admin ("upcoming" | "past") so pages stay statically renderable.
+// ALL entries below are draft placeholders until the club supplies its real calendar.
+
+export const eventCategories = [
+    { key: "business", label: "Business" },
+    { key: "culture", label: "Culture" },
+    { key: "members", label: "Members" },
+];
+
+export const events = [
+    {
+        slug: "business-exchange-winter-2026",
+        status: "upcoming",
+        draft: true,
+        category: "business",
+        title: "Business Exchange — Winter Session",
+        date: "2026-12-12",
+        dateLabel: { day: "12", month: "December 2026", weekday: "Saturday" },
+        time: "6:30 pm – 10:00 pm",
+        venue: "The Boardroom, KBBCC",
+        summary:
+            "An evening of introductions between Korean investors and Bangladeshi manufacturers, followed by dinner for members and their guests.",
+        body: [
+            "The winter session brings together a small group of Korean investors visiting Dhaka and Bangladeshi manufacturers looking for partners in electronics, textiles and light engineering.",
+            "The evening opens with short briefings from both sides, followed by hosted introductions arranged in advance by the secretariat. Dinner is served in the club from 8:30 pm.",
+            "Places are limited and allocated to members first. Members may bring one guest, subject to confirmation.",
+        ],
+        image: "dinner-long-table",
+        rsvp: { label: "Reserve a place", href: "/contact?subject=business-exchange-winter-2026" },
+    },
+    {
+        slug: "seollal-new-year-evening-2027",
+        status: "upcoming",
+        draft: true,
+        category: "culture",
+        title: "Seollal — Korean New Year Evening",
+        date: "2027-02-06",
+        dateLabel: { day: "06", month: "February 2027", weekday: "Saturday" },
+        time: "7:00 pm – 10:30 pm",
+        venue: "KBBCC, Uttar Badda",
+        summary:
+            "Tteokguk, traditional games and an evening with the families of our Korean members — the club's welcome to the Lunar New Year.",
+        body: [
+            "Seollal is the most important family holiday in Korea. Each year our Korean members open the club to share it — with tteokguk, yutnori and the bows that mark a new year.",
+            "Families are welcome. Children's activities run from 7:00 pm to 8:30 pm.",
+        ],
+        image: "culture-palace-hall",
+        rsvp: { label: "Reserve a place", href: "/contact?subject=seollal-new-year-evening-2027" },
+    },
+    {
+        slug: "pohela-boishakh-1434",
+        status: "upcoming",
+        draft: true,
+        category: "culture",
+        title: "Pohela Boishakh — Bengali New Year 1434",
+        date: "2027-04-14",
+        dateLabel: { day: "14", month: "April 2027", weekday: "Wednesday" },
+        time: "11:00 am – 3:00 pm",
+        venue: "KBBCC, Uttar Badda",
+        summary:
+            "Panta-ilish, music and colour: our Bangladeshi members return the favour and welcome the Bengali New Year with the whole club.",
+        body: [
+            "Pohela Boishakh is Bangladesh's great festival of renewal. The club marks it with a long lunch, folk music and a small exhibition of crafts from across the country.",
+            "Dress in red and white is warmly encouraged.",
+        ],
+        image: "club-candlelit-table",
+        rsvp: { label: "Reserve a place", href: "/contact?subject=pohela-boishakh-1434" },
+    },
+    {
+        slug: "trade-investment-partnership-2026",
+        status: "past",
+        draft: true,
+        category: "business",
+        title: "Korea & Bangladesh: Trade, Investment, Partnership",
+        date: "2026-11-08",
+        dateLabel: { day: "08", month: "November 2026", weekday: "Sunday" },
+        time: "4:00 pm – 8:00 pm",
+        venue: "The Boardroom, KBBCC",
+        summary: "A full house for the club's business exchange on trade, investment and long-term partnership between the two countries.",
+        body: [
+            "Members, guests and a visiting Korean delegation met in the club boardroom for an afternoon of briefings and introductions.",
+            "The session closed with the presentation of certificates of appreciation to members who have opened new doors between the two business communities.",
+        ],
+        image: "group-conference-01",
+        images: ["meeting-conference-01", "meeting-conference-02", "award-handover-01"],
+    },
+    {
+        slug: "members-recognition-evening-2026",
+        status: "past",
+        draft: true,
+        category: "members",
+        title: "Honouring the members who opened new doors",
+        date: "2026-10-18",
+        dateLabel: { day: "18", month: "October 2026", weekday: "Sunday" },
+        time: "7:00 pm",
+        venue: "The Boardroom, KBBCC",
+        summary: "An evening to thank the members and partners whose work brought new investment and friendships to the club.",
+        body: ["Certificates of appreciation were presented to members and partners, followed by a dinner for members and guests."],
+        image: "award-handover-03",
+        images: ["award-handover-02", "award-handover-01"],
+    },
+    {
+        slug: "autumn-members-dinner-2026",
+        status: "past",
+        draft: true,
+        category: "members",
+        title: "Autumn Members' Dinner",
+        date: "2026-09-27",
+        dateLabel: { day: "27", month: "September 2026", weekday: "Sunday" },
+        time: "8:00 pm",
+        venue: "Partner venue, Gulshan",
+        summary: "The season's first members' dinner — round tables, long conversations and a few new friendships.",
+        body: ["Members and their families gathered for the first dinner of the season at one of the club's partner venues in Gulshan."],
+        image: "dinner-roundtable-01",
+        images: ["dinner-roundtable-02", "dinner-roundtable-03", "dinner-longtable-01"],
+    },
+];

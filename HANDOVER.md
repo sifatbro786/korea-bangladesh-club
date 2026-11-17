@@ -1,6 +1,6 @@
 # HANDOVER — KBBCC
 
-_Last updated: 2026-11-17 · Phase 0 complete (Step 4 done) → next: Phase 1 Step 1 (Header/Nav)_
+_Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y, SEO, Lighthouse) → next: Phase 2 (backend + admin)_
 
 ## Project snapshot
 - Next.js 16.4.6 (App Router, JS), React 19.3, Tailwind v4.3 (via `@tailwindcss/turbopack`), React Compiler on, `cacheComponents` + `partialPrefetching` on.
@@ -9,7 +9,23 @@ _Last updated: 2026-11-17 · Phase 0 complete (Step 4 done) → next: Phase 1 St
 - Dependencies added: `lenis` 1.3.27, `gsap` 3.15.1 (exact-pinned).
 
 ## Folder map
-- `app/` — routes (`layout.js` has fonts + metadata; `page.js` is still a placeholder)
+- `app/layout.js` — root: fonts, metadata, loader head script, `<InitialLoader>`, `<SmoothScroll>`
+- `app/(site)/` — public site route group: `layout.js` (skip link, Header, `<main>`, Footer), `page.js` (homepage). Phase 2 admin gets its own group.
+- `components/layout/` — `Header.js` (server) + `HeaderClient.js` (scroll state, hide-on-scroll, mobile menu dialog), `Footer.js` (marquee, columns, cached year)
+- `components/home/` — one file per homepage section: Hero (+HeroIntro), Intro, Pillars, Clubhouse, Events, Membership, Leadership, Moments (+MomentsTrack), Visit
+- `components/ui/` — `SectionLabel`, `Ornament`, `Arrow`, `ArrowLink` (the only CTA style; no pill buttons)
+- `components/motion/` — `Parallax`, `SplitHeading` (line-mask heading reveal, SplitText), `ScrubText` (word-by-word scroll fill), `StackPanels` (sticky stacked panels + depth), `Shutters` (hanji lattice shutters open on scroll), `Marquee` (scroll-velocity marquee), `DrawLine` (scroll-drawn hairline). All lazy GSAP, all static under reduced motion.
+- `components/ui/Select.js` — themed, accessible select (combobox + listbox, keyboard, typeahead, hidden input for FormData); `components/ui/LineArt.js` — ring / lattice hairline ornaments
+- `components/gallery/GalleryBrowser.js` (filter + masonry + `<dialog>` lightbox), `components/news/NewsList.js`, `components/contact/ContactForm.js` + `MapEmbed.js` (click-to-load facade), `components/forms/Field.js` (shared field + input style), `components/page/LegalPage.js`
+- `app/(site)/gallery`, `app/(site)/news`, `app/(site)/news/[slug]`, `app/(site)/contact`, `app/(site)/privacy`, `app/(site)/terms`, `app/not-found.js` (global 404 with site chrome)
+- `content/gallery.js`, `content/news.js` (posts: news | notice, block body), `content/contact.js`, `content/legal.js`
+- `app/sitemap.js`, `app/robots.js` (disallows /dev/), `app/manifest.js`, `app/opengraph-image.js` (default share image, static at build) · `lib/seo.js` (`SITE_URL`, `absoluteUrl`) · `components/seo/JsonLd.js` (Organization on home, Event on event pages, NewsArticle on news pages)
+- `components/page/` — `PageHero` (inner-page hero; h1 never hidden), `CtaBand`
+- `components/about/`, `components/membership/`, `components/events/` — page sections; `ApplicationForm` + `EventsBrowser` are the client islands
+- `app/(site)/about`, `app/(site)/membership`, `app/(site)/events`, `app/(site)/events/[slug]` (generateStaticParams over all slugs; unknown slug → 404)
+- `content/about.js`, `content/membership.js`, `content/events.js` (events collection with admin-set `status`)
+- `public/images/brand/logo.png` — official emblem cut out from the JPEG (corner background removed by flood fill, ribbon intact); `app/icon.png`, `app/apple-icon.png`, `app/favicon.ico` generated from it
+- `content/navigation.js`, `content/home.js` — nav + homepage copy (mirrors future Mongo docs); `draft: true` marks placeholder copy
 - `app/dev/media/` — dev-only media/grade preview (`/dev/media`, 404 in production)
 - `app/dev/motion/` — dev-only motion check (`/dev/motion`: anchors, Reveal, GSAP scrub/parallax)
 - `lib/motion/runtime.js` — Lenis singleton + `loadGsap()` (lazy) + Lenis↔gsap.ticker handover
@@ -19,7 +35,8 @@ _Last updated: 2026-11-17 · Phase 0 complete (Step 4 done) → next: Phase 1 St
 - `components/motion/useGsap.js` — `useGsap(scopeRef, ({ gsap, ScrollTrigger, reduce }) => {...})`; auto-reverted on unmount
 - `content/` — static content that mirrors future MongoDB documents (`site.js` = settings singleton, `media.js` = media collection)
 - `lib/content.js` — **the only way components read content** (`getSiteSettings`, `getMedia`, `getMediaList`); `server-only`
-- `lib/unsplash.js` — `unsplashSrc(photoPath)` caps Unsplash originals at 2400px
+- `lib/unsplash.js` + `lib/unsplash.config.mjs` — `unsplashSrc(photoPath)`; host + the ONE allowed query string live in the `.mjs` (shared with `next.config.mjs`)
+- `components/ui/InlineScript.js` — pre-paint inline script without React's dev "script tag" warning (used for the loader head script)
 - `components/media/ClubImage.js` — the only image primitive (next/image + grade + blur placeholder)
 - `public/images/club/` — real club photos, renamed by scene (15 files)
 - `public/images/brand/logo-source.jpeg` — low-res source logo (324px JPEG); needs a vector replacement
@@ -33,7 +50,10 @@ _Last updated: 2026-11-17 · Phase 0 complete (Step 4 done) → next: Phase 1 St
   - [x] Step 2: Image strategy (Unsplash remotePattern, AVIF/WebP, quality allowlist, localPatterns), photo grade utilities, media registry with blur placeholders, content access layer, `/dev/media` preview
   - [x] Step 3: Motion foundation — Lenis (anchors, stopInertiaOnNavigate), lazy GSAP + ScrollTrigger on one ticker, `<Reveal>`, `useGsap`, reduced-motion everywhere, `/dev/motion`
   - [x] Step 4: Initial loader — SSR overlay, head-script gating (no flash), waits for fonts + images in first 2.5 viewports (min 4.2s, cap 6.5s), hairline progress, curtain exit, scroll lock, CSS failsafe, `onLoaderDone()` hook
-- **Phase 1 — Static frontend** (one section per step): header/nav → hero → intro → about → membership → events → leadership → gallery → contact/map → footer. Then inner pages.
+- **Phase 1 — Static frontend** (one section per step)
+  - [x] 1 Header/Nav · [x] 2 Hero (Seoul|Dhaka diptych) · [x] 3 Intro · [x] 4 Pillars (Trade/Investment/Culture) · [x] 5 Clubhouse · [x] 6 Events · [x] 7 Membership band · [x] 8 Leadership · [x] 9 Moments (pinned horizontal) · [x] 10 Visit · [x] 11 Footer
+  - [x] 12 About (story, values, committee, CTA) · [x] 13 Membership (benefits, tiers, process, FAQ, application form UI) · [x] 14 Events (filterable list with cursor preview + detail pages) · [x] 15 Gallery (+ Unsplash credits, auto-collected) · [x] 16 News & notices (list + detail) · [x] 17 Contact (form + map facade), Privacy, Terms, custom 404
+  - [x] 18 Responsive + a11y pass (axe-core: 0 violations on 10 pages × desktop/mobile; no overflow at 360/768/1024/1920; keyboard + skip link verified) · [x] 19 SEO (sitemap, robots, manifest, OG image, canonicals, JSON-LD) · [x] 20 Lighthouse mobile 90+ (median: home 91, membership 93, event 95; others 89–97; a11y/BP/SEO 100)
 - **Phase 2 — Backend + admin dashboard:** MongoDB, auth (JWT/httpOnly), every page's text and images editable, image upload.
 - **Phase 3 — E-commerce:** single-store B2B/B2C, managed by the club, connected to B&F's Kmarket.com.
 
@@ -63,11 +83,52 @@ _Last updated: 2026-11-17 · Phase 0 complete (Step 4 done) → next: Phase 1 St
    - SplitText (free in gsap 3.13+) is allowed for display headings when a section needs it; import it lazily like ScrollTrigger.
    - gsap is under GreenSock's "Standard no-charge" licence: fine for this client site.
 
+10. **Homepage composition:** sections are server components fed by `getHomePage()`; only Header, HeroIntro, Reveal, Parallax, MomentsTrack are client islands. The h1 ("Two nations. / One table.") is never hidden — hero intro animates only images, seam and secondary text, triggered by `onLoaderDone()`.
+11. **Images (Sifat, 2026-11-17):** club photos are used only where they genuinely fit (sessions, recognition, dinners, portrait). Everything else uses curated free-licence Unsplash photos (8 in `content/media.js`, each with credit). All are admin-replaceable.
+12. **No Google Maps iframe** on the homepage (heavy JS for one link) — address + "Open in Google Maps" link. The Contact page can embed a click-to-load map later.
+13. **Crimson token deepened to `#7A1820` (oxblood)** — the brighter red read too loud across a full-width band.
+
+14. **Unsplash allowlist (bugfix 2026-11-17):** `remotePatterns: [new URL("https://host/**")]` forbids ANY query string, so every Unsplash URL 500'd. Now an object pattern with `search: UNSPLASH_QUERY` (exact match). Any other query → 400. Never add `search`-less patterns (that allows every query).
+15. **Inline head script:** rendered via `InlineScript` (server `text/javascript`, client `text/plain`, per Next's "preventing flash before hydration" guide). `LoaderController` re-applies `data-loader` in `useLayoutEffect` because dev Strict Mode resets `<html>` attributes (no-op in production).
+16. Dev-only notice "rendering with server caches disabled" = the request had `cache-control: no-cache` (DevTools "Disable cache" or hard reload). Not a bug.
+
+17. **Homepage v2 (Sifat feedback 2026-11-17):** hero Dhaka pane → modern metro-rail aerial (Unsplash, Tatiana Mokhova); "What we do" rebuilt as full-screen stacked panels (was a dark zig-zag that read as boring); real logo in header, loader, footer and favicons.
+18. **Motion inventory (homepage):** hero intro after loader + scroll-out split · Intro word scrub · section headings line-mask reveal · Pillars stacked panels · image curtain (clip) reveals · Clubhouse parallax · Membership hanji shutters · Moments pinned horizontal · footer velocity marquee. GSAP + SplitText stay out of the initial bundle (verified).
+19. **Rule for full-bleed images:** `ClubImage` wrapper is `relative h-full`; to layer content over it, put it inside an `absolute inset-0` box (the Pillars bug where titles were pushed out of view).
+20. **Events:** homepage "What's on" reads from `content/events.js` (first upcoming + latest past). `status` is admin-set, not computed from the date, so pages stay static.
+21. **Membership form is a UI mock** (validation, honeypot, a11y done; submit only fakes success). Must become a Server Action (zod, rate limit, Mongo, email) in Phase 2 before launch. Tier "Apply" links scroll to `#apply` (no query preselect — would need `useSearchParams` + Suspense under cacheComponents).
+
+22. **Theme direction (Sifat, 2026-11-17):** stay dark-first, add tonal rhythm instead of going light: `theme-ivory` sections (homepage Intro + Visit), warm-dark Clubhouse, static champagne `glow-lamp` (hero, membership band), `LineArt` ring/lattice behind Pillars and Moments headers. No animated/mesh gradients. Roll out to inner pages next (About values, Membership benefits + form are the candidates).
+23. **Native `<select>` removed** from the application form (OS-drawn white option list). `Select` component instead; validation focuses `[data-field=name]`.
+24. **About story heading is no longer sticky** (Sifat asked for it to stay in place). Event detail sidebar is still sticky by design.
+25. `metadataBase` reads `SITE_URL` (env) — set it on deploy for correct OG image URLs.
+
+26. **Tonal rhythm rolled out site-wide:** every `PageHero` has a lamp glow + ring line-art. Ivory sections: About Values · Membership Benefits + Application · Events "Recently" · event/news article bodies · Gallery credits · News list · Contact form · Legal bodies. Warm-dark: About Story, Membership FAQ, homepage Clubhouse.
+27. **Marquee bug (home only):** it used a position-based ScrollTrigger whose end was measured before pins/images grew the page, so it stopped updating near the footer. Now uses `ScrollTrigger.observe` (scroll deltas/velocity only). Also `useGsap` now schedules one `ScrollTrigger.refresh()` after any trigger is created/reverted, so later pins never leave earlier triggers mis-measured.
+28. **Contact form prefill:** event "Reserve a place" links go to `/contact?subject=<event-slug>` → subject "events" + message prefilled. Read via `useSyncExternalStore(location.search)` (no `useSearchParams` → no Suspense needed under cacheComponents). Form is a Phase-1 mock like the membership form.
+29. **Map:** click-to-load Google Maps iframe (no third-party request or map JS until asked; privacy notice mentions it). Dark-styled with CSS filter.
+30. **Legal pages are drafts** — sensible defaults for a club site (no tracking cookies; one localStorage value for the loader). Need the club's legal review before launch.
+
+31. **Loader is first visit per 12h, not per page load** (`localStorage`). Test with `?loader`, a private window, or clear `kbbcc:loader-seen`.
+32. **A11y fixes (step 18):** muted token #6B6A65 → #8C8A84 (was 3.4:1); header logo link name now matches visible text; Moments track is a focusable labelled region; Events "Upcoming/Recently" labels are h2 (`SectionLabel as="h2"`); decorative 404 numeral drawn via ::before.
+33. **Responsive fixes:** Pillars title/body, membership tiers + process, news featured + list stack below `lg` (they overflowed at 768–1024). Footer link columns 2-up below `lg`.
+34. **Performance (step 20):**
+    - Loader has no per-frame JS: progress is one CSS transition (`.loader[data-progress]`). Images warm in two stages (on-screen first, then nearby) so they never compete with the LCP image.
+    - GSAP/SplitText load only after the loader is done + `requestIdleCallback` (`afterLoaderIdle()` in runtime) — moved ~250 ms of TBT out of the critical window. CSS fallbacks cover the gap.
+    - Hero/page-hero/detail images use `quality={60}` (grade overlay hides it); only the first hero pane is `preload`, the second is `eager`. Loader logo is `eager`, not `preload`.
+    - Blur placeholders regenerated as 8px WebP (media.js 25 KB → 13 KB; smaller HTML/RSC).
+    - Measured in a sandbox with fonts mocked and Unsplash replaced by local photos — re-run Lighthouse on the real deployment (real fonts + Unsplash) and set `SITE_URL`.
+35. **SEO:** set `SITE_URL` in production (sitemap, robots, canonicals, OG and JSON-LD URLs all derive from it). Submit `/sitemap.xml` to Google Search Console after launch.
+
 ## Open items (waiting on client/Sifat)
 - Logo as SVG or high-res transparent PNG.
 - Name and title of the person in `leader-portrait-01.jpg`; committee member list.
 - Original high-res photos (not WhatsApp-compressed), especially the club space at Rupayan Millennium Square.
 - Club phone, email and social links (`content/site.js` has them as `null`).
+- **Draft copy to confirm/replace** (`draft: true` in `content/home.js`): the featured event (12 Dec 2026, Winter Session), membership tiers, the President's quote, two clubhouse space descriptions. President's name is `null` (UI shows the role only).
+- Committee names (About page shows "To be confirmed"), real event calendar, tier fees, membership process — all `draft: true`.
+- Logo is a raster cut-out (324px). Ask the club for the SVG / original artwork for crisp large sizes.
+- Unsplash photo credits should be listed on the Gallery page (step 15) — credit data is already in `content/media.js`.
 
 ## Known caveats
 - `.next/kbbcc-src.tgz` is a throwaway source snapshot used for browser testing; it is inside the gitignored build folder and disappears on the next `next build`/clean.

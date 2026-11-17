@@ -12,14 +12,34 @@ Never hardcode hex values in components — use the token utilities (`bg-surface
 | `surface-2` | `#1B1D21` | Hover / nested surfaces |
 | `heading` | `#F4F1EA` | Headings, key text |
 | `body` | `#9A9891` | Body copy |
-| `muted` | `#6B6A65` | Captions, meta |
+| `muted` | `#8C8A84` | Captions, meta (≥4.5:1 on every dark surface) |
 | `accent` | `#C6A87C` | Champagne — links, ornaments, active states |
 | `accent-soft` | `#A88D65` | Accent hover/pressed |
 | `line` | `rgba(198,168,124,0.2)` | 1px dividers and hairlines |
-| `crimson` | `#8E1B24` | Logo red, darkened for a dark UI — max ~5% of a screen |
+| `crimson` | `#7A1820` | Logo red deepened to oxblood for a dark UI — used once on the homepage (membership band) |
+| `danger` | `#E0A39C` | Form validation messages and invalid field borders only |
 | `navy` | `#1D2A4D` | Logo navy, desaturated — max ~5% of a screen |
 
+### Tonal rhythm (2026-11-17)
+
+The site is dark-first, but never one flat tone for long. Sections alternate:
+
+- **Dark** `bg` · **Warm dark** `bg-warm` (`#15120E`) · **Surface** `surface` · **Crimson** band (once per page) · **Ivory** (`theme-ivory`).
+- `theme-ivory` remaps the tokens inside the section (bg `#F4F1EA`, heading `#141619`, body `#4A4842` 8.1:1, muted `#6E6A62` 4.8:1, accent `#7A5E38` 5.3:1, line 14% ink). The dark-theme champagne fails AA on ivory, hence the deeper accent. Grain is inverted there.
+- Homepage: Intro and Visit are ivory. Use at most 2–3 ivory sections per page, never two in a row.
+- Photo grade tints are fixed champagne and do not follow section themes.
+
+### Atmosphere
+
+- `glow-lamp`: one static, soft champagne radial light (`--gx`, `--gy`, `--gs`, `--ga`). Reads as lamplight. Never animated, never multicolour mesh/aurora gradients.
+- `LineArt` (`components/ui/LineArt.js`): `ring` (from the emblem ring) and `lattice` (changhoji window). Hairline, `text-accent`, 8–14% opacity, partly off-canvas behind section headers.
+
 Tailwind's default palette is wiped (`--color-*: initial`), so `orange-500`, `indigo-*`, `white` and `black` do not exist on purpose.
+
+## Form controls
+
+- Inputs: underline only (`border-b border-line`), label in tracked caps above.
+- Selects use `components/ui/Select.js` (ARIA select-only combobox), never a native `<select>`: the OS draws native option lists in its own colours.
 
 ## Typography
 

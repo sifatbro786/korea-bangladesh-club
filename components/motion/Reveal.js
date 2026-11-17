@@ -25,11 +25,12 @@ function getObserver() {
 /**
  * Library-free scroll reveal (CSS transition + IntersectionObserver).
  * Styles live in globals.css under [data-reveal].
+ * variant="clip": image curtain (clip-path from the bottom + slow zoom-out) instead of fade-up.
  *
  * Never wrap the LCP element (hero heading / hero image) — hidden content
  * delays Largest Contentful Paint.
  */
-export default function Reveal({ as: Tag = "div", delay = 0, className, style, children, ...rest }) {
+export default function Reveal({ as: Tag = "div", variant, delay = 0, className, style, children, ...rest }) {
     const ref = useRef(null);
 
     useEffect(() => {
@@ -43,7 +44,7 @@ export default function Reveal({ as: Tag = "div", delay = 0, className, style, c
     return (
         <Tag
             ref={ref}
-            data-reveal=""
+            data-reveal={variant ?? ""}
             className={className}
             style={delay ? { ...style, "--reveal-delay": `${delay}ms` } : style}
             {...rest}

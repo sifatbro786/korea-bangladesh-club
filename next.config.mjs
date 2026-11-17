@@ -1,3 +1,5 @@
+import { UNSPLASH_HOST, UNSPLASH_QUERY } from "./lib/unsplash.config.mjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     /* config options here */
@@ -11,7 +13,10 @@ const nextConfig = {
         // 31 days; local images are content-addressed by filename, admin uploads get new names.
         minimumCacheTTL: 2678400,
         localPatterns: [{ pathname: "/images/**", search: "" }],
-        remotePatterns: [new URL("https://images.unsplash.com/**")],
+        remotePatterns: [
+            // Exact query only — see lib/unsplash.config.mjs. `new URL(".../**")` would forbid any query.
+            { protocol: "https", hostname: UNSPLASH_HOST, port: "", pathname: "/**", search: UNSPLASH_QUERY },
+        ],
     },
     turbopack: {
         rules: {

@@ -1,3 +1,5 @@
+import Image from "next/image";
+import { getSiteSettings } from "@/lib/content";
 import LoaderController from "./LoaderController";
 
 const WORD = "KBBCC".split("");
@@ -7,10 +9,16 @@ const WORD = "KBBCC".split("");
  * the real page renders underneath at full opacity (LCP is not delayed).
  * Visibility is controlled by html[data-loader] — see loaderScript.js and globals.css.
  */
-export default function InitialLoader() {
+export default async function InitialLoader() {
+    const site = await getSiteSettings();
+    const logo = site.logo?.image;
+
     return (
         <div className="loader grain" aria-hidden="true">
             <div className="loader-inner">
+                {logo ? (
+                    <Image src={logo.src} alt="" width={112} height={112} sizes="112px" loading="eager" className="loader-logo mb-8 size-24 md:size-28" />
+                ) : null}
                 <p className="loader-kicker text-label uppercase tracking-label text-accent">
                     Korea &nbsp;·&nbsp; Bangladesh
                 </p>

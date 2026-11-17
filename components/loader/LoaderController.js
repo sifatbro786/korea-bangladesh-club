@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import { markLoaderDone, prefersReducedMotion, setScrollLock } from "@/lib/motion/runtime";
-import { LOADER_STORAGE_KEY } from "./loaderScript";
+import { LOADER_STORAGE_KEY, readLoaderState } from "./loaderScript";
 
 const MIN_MS = 4200; // brief: 4–5s first-visit hold
 const MAX_MS = 6500; // hard cap — a slow network never traps the visitor
@@ -10,28 +10,32 @@ const MIN_MS_REDUCED = 700;
 const EXIT_MS = 1100; // keep in sync with .loader exit transition in globals.css
 const PRELOAD_VIEWPORTS = 2.5; // warm images within this many screens from the top
 
-function waitForImages() {
-    const limit = window.innerHeight * PRELOAD_VIEWPORTS;
-    const images = [...document.querySelectorAll("img")].filter(
-        (img) => !img.closest(".loader") && img.getBoundingClientRect().top < limit,
-    );
-    // next/image lazy-loads below the fold. Instead of touching the DOM (which would break
-    // hydration of segments that are still streaming), warm the browser cache with an
-    // off-DOM copy using the same srcset/sizes, so the browser picks the same candidate.
-    return images.map((img) => {
-        if (img.complete && img.naturalWidth > 0) return img.decode().catch(() => {});
-        const warm = new Image();
-        if (img.sizes) warm.sizes = img.sizes;
-        if (img.srcset) warm.srcset = img.srcset;
-        warm.src = img.currentSrc || img.src;
-        return warm.decode().catch(() => {});
-    });
-}
+const decodeOrWarm = (img) => {
+    if (img.complete && img.naturalWidth > 0) return img.decode().catch(() => {});
+    // Off-DOM copy with the same srcset/sizes: warms the cache without touching
+    // the DOM (mutating <img> breaks hydration of segments still streaming).
+    const warm = new Image();
+    if (img.sizes) warm.sizes = img.sizes;
+    if (img.srcset) warm.srcset = img.srcset;
+    warm.src = img.currentSrc || img.src;
+    return warm.decode().catch(() => {});
+};
 
+/*
+ * Performance notes (Lighthouse, 2026-11-17):
+ * - No per-frame JS: the progress hairline is a single CSS transition (data-progress).
+ * - Images are warmed in two stages — first the ones on screen (incl. the LCP image),
+ *   then the rest — so off-screen images never compete with the LCP download.
+ */
 export default function LoaderController() {
+    // Dev only: Strict Mode's remount resets <html> attributes. Re-apply before paint.
+    useLayoutEffect(() => {
+        const html = document.documentElement;
+        if (!html.hasAttribute("data-loader")) html.setAttribute("data-loader", readLoaderState());
+    }, []);
+
     useEffect(() => {
         const html = document.documentElement;
-
         if (html.getAttribute("data-loader") !== "active") {
             markLoaderDone();
             return;
@@ -41,51 +45,38 @@ export default function LoaderController() {
         const loader = document.querySelector(".loader");
         const reduced = prefersReducedMotion();
         const minMs = reduced ? MIN_MS_REDUCED : MIN_MS;
-        const start = performance.now();
-
-        let assetsDone = false;
-        let loaded = 0;
-        const tasks = [document.fonts?.ready ?? Promise.resolve(), ...waitForImages()];
-        const total = tasks.length;
-        for (const task of tasks) task.then(() => (loaded += 1));
-        Promise.all(tasks).then(() => (assetsDone = true));
-
-        let raf = 0;
+        let cancelled = false;
         let exitTimer = 0;
-        let finished = false;
 
-        const finish = () => {
-            if (finished) return;
-            finished = true;
-            loader?.style.setProperty("--p", "1");
+        loader?.style.setProperty("--loader-ms", `${minMs}ms`);
+        loader?.setAttribute("data-progress", "run");
+
+        const vh = window.innerHeight;
+        const imgs = [...document.querySelectorAll("img")].filter((img) => !img.closest(".loader"));
+        const tops = imgs.map((img) => img.getBoundingClientRect().top); // one layout read
+        const onScreen = imgs.filter((_, i) => tops[i] < vh);
+        const nearby = imgs.filter((_, i) => tops[i] >= vh && tops[i] < vh * PRELOAD_VIEWPORTS);
+
+        const assets = Promise.all([document.fonts?.ready ?? Promise.resolve(), ...onScreen.map(decodeOrWarm)]).then(() =>
+            Promise.all(nearby.map(decodeOrWarm)),
+        );
+        const minHold = new Promise((r) => setTimeout(r, minMs));
+        const cap = new Promise((r) => setTimeout(r, MAX_MS));
+
+        Promise.race([Promise.all([assets, minHold]), cap]).then(() => {
+            if (cancelled) return;
+            loader?.setAttribute("data-progress", "done");
             try {
                 localStorage.setItem(LOADER_STORAGE_KEY, String(Date.now()));
             } catch {}
             html.setAttribute("data-loader", "leaving");
             setScrollLock(false);
             markLoaderDone();
-            exitTimer = window.setTimeout(
-                () => html.setAttribute("data-loader", "done"),
-                reduced ? 0 : EXIT_MS,
-            );
-        };
-
-        const tick = () => {
-            const elapsed = performance.now() - start;
-            // Progress never runs ahead of either time or assets.
-            const p = Math.min(elapsed / minMs, (loaded + 1) / (total + 1), 1);
-            loader?.style.setProperty("--p", p.toFixed(3));
-
-            if ((elapsed >= minMs && assetsDone) || elapsed >= MAX_MS) {
-                finish();
-                return;
-            }
-            raf = requestAnimationFrame(tick);
-        };
-        raf = requestAnimationFrame(tick);
+            exitTimer = window.setTimeout(() => html.setAttribute("data-loader", "done"), reduced ? 0 : EXIT_MS);
+        });
 
         return () => {
-            cancelAnimationFrame(raf);
+            cancelled = true;
             window.clearTimeout(exitTimer);
             setScrollLock(false);
         };

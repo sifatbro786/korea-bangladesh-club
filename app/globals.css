@@ -11,15 +11,17 @@
     --color-bg: #0b0c0e;
     --color-surface: #141619;
     --color-surface-2: #1b1d21;
+    --color-bg-warm: #15120e; /* warm-dark step between sections */
     --color-heading: #f4f1ea;
     --color-body: #9a9891;
-    --color-muted: #6b6a65;
+    --color-muted: #8c8a84; /* 4.8:1 on surface-2 — AA for small text */
     --color-accent: #c6a87c;
     --color-accent-soft: #a88d65;
     --color-line: rgb(198 168 124 / 0.2);
     /* Logo-derived secondary accents — max ~5% of any screen */
-    --color-crimson: #8e1b24;
+    --color-crimson: #7a1820;
     --color-navy: #1d2a4d;
+    --color-danger: #e0a39c; /* form errors — soft rose, AA on bg/surface */
 
     --radius-*: initial;
     --radius-hair: 2px;
@@ -117,7 +119,7 @@
         inset: 0;
         z-index: 1;
         pointer-events: none;
-        background-color: var(--color-accent);
+        background-color: #c6a87c; /* fixed champagne: grade must not change with section theme */
         mix-blend-mode: multiply;
         opacity: 0.42;
     }
@@ -136,7 +138,7 @@
         inset: 0;
         z-index: 1;
         pointer-events: none;
-        background-color: var(--color-accent);
+        background-color: #c6a87c; /* fixed champagne: grade must not change with section theme */
         mix-blend-mode: multiply;
         opacity: 0.18;
     }
@@ -186,6 +188,7 @@
     to {
         opacity: 1;
         transform: none;
+        clip-path: inset(0 0 0 0);
     }
 }
 
@@ -283,7 +286,18 @@ html[data-loader="leaving"] .loader-inner {
     flex: 1;
     height: 1px;
     background-color: var(--color-accent);
-    transform: scaleX(var(--p, 0));
+    transform: scaleX(0);
+}
+
+/* Progress is one CSS transition (no per-frame JS): run → 94% over the hold, done → 100%. */
+.loader[data-progress="run"] .loader-rule-line {
+    transform: scaleX(0.94);
+    transition: transform var(--loader-ms, 4200ms) cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.loader[data-progress="done"] .loader-rule-line {
+    transform: scaleX(1);
+    transition: transform 0.35s var(--ease-club);
 }
 
 .loader-rule-line--left {
@@ -370,5 +384,292 @@ html[data-loader="leaving"] .loader-inner {
 @keyframes loader-unlock {
     to {
         overflow: visible;
+    }
+}
+
+/* ───────────────────────── Layout primitives ───────────────────────── */
+
+@utility container-club {
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+@utility section-y {
+    padding-block: clamp(5.5rem, 11vw, 10rem);
+}
+
+/* Text link with a hairline underline that withdraws on hover. */
+@utility link-line {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 1px;
+    padding-bottom: 0.3em;
+    transition:
+        background-size 0.6s var(--ease-club),
+        color 0.3s var(--ease-club);
+
+    &:hover {
+        background-position: 100% 100%;
+        background-size: 0% 1px;
+    }
+}
+
+/*
+ * Changhoji (Korean lattice window) frame: square notches at the corners instead of
+ * rounded corners. Used as an image mask for identity moments — sparingly.
+ */
+@utility frame-lattice {
+    --n: clamp(0.875rem, 1.6vw, 1.5rem);
+    clip-path: polygon(
+        var(--n) 0,
+        calc(100% - var(--n)) 0,
+        calc(100% - var(--n)) var(--n),
+        100% var(--n),
+        100% calc(100% - var(--n)),
+        calc(100% - var(--n)) calc(100% - var(--n)),
+        calc(100% - var(--n)) 100%,
+        var(--n) 100%,
+        var(--n) calc(100% - var(--n)),
+        0 calc(100% - var(--n)),
+        0 var(--n),
+        var(--n) var(--n)
+    );
+}
+
+/* ───────────────────────── Header ───────────────────────── */
+
+.site-header {
+    transition:
+        transform 0.6s var(--ease-club),
+        background-color 0.4s var(--ease-club),
+        border-color 0.4s var(--ease-club),
+        height 0.4s var(--ease-club);
+}
+
+.site-header[data-hidden="true"] {
+    transform: translate3d(0, -100%, 0);
+}
+
+html.menu-open {
+    overflow: hidden;
+}
+
+.mobile-menu {
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    transition:
+        clip-path 0.8s var(--ease-club),
+        visibility 0s linear 0.8s;
+}
+
+.mobile-menu[data-open="true"] {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+    transition:
+        clip-path 0.8s var(--ease-club),
+        visibility 0s;
+}
+
+/* ───────────────────────── Hero intro ───────────────────────── */
+/* The h1 is never hidden (it is the LCP candidate). Only decoration animates. */
+
+.hero-pane img {
+    transition: transform 2.6s var(--ease-club);
+}
+
+.hero-seam {
+    transform-origin: top center;
+    transition: transform 1.6s var(--ease-club) 0.2s;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    #hero:not([data-intro="play"]) .hero-pane img {
+        transform: scale(1.08);
+    }
+
+    #hero:not([data-intro="play"]) .hero-seam {
+        transform: scaleY(0);
+    }
+
+    .hero-fade {
+        transition:
+            opacity 1s var(--ease-club),
+            transform 1.2s var(--ease-club);
+        transition-delay: var(--d, 0s);
+    }
+
+    #hero:not([data-intro="play"]) .hero-fade {
+        opacity: 0;
+        transform: translate3d(0, 1rem, 0);
+    }
+
+    html:not(.motion-ready) #hero:not([data-intro="play"]) .hero-fade {
+        animation: reveal-failsafe 0s 4s forwards;
+    }
+}
+
+/* ───────────────────────── Footer marquee ───────────────────────── */
+
+.marquee-track {
+    animation: marquee 48s linear infinite;
+}
+
+.marquee-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-accent);
+}
+
+@keyframes marquee {
+    to {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+        animation: none;
+    }
+}
+
+/* ───────────────────────── Motion v2 ───────────────────────── */
+
+/* Image curtain reveal — <Reveal variant="clip"> */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    [data-reveal="clip"] {
+        transition: clip-path 1.4s var(--ease-club);
+        transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    [data-reveal="clip"] img {
+        transition: transform 1.9s var(--ease-club);
+        transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    [data-reveal="clip"]:not([data-revealed]) {
+        opacity: 1;
+        transform: none;
+        clip-path: inset(100% 0 0 0);
+    }
+
+    [data-reveal="clip"]:not([data-revealed]) img {
+        transform: scale(1.18);
+    }
+}
+
+/* Hanji lattice shutters (components/motion/Shutters.js) */
+.hanji-shutter {
+    position: absolute;
+    inset-block: 0;
+    z-index: 3;
+    display: none;
+    width: 50.5%;
+    border-color: rgb(198 168 124 / 0.35);
+    background-color: var(--color-surface-2);
+    background-image:
+        repeating-linear-gradient(to right, rgb(198 168 124 / 0.16) 0 1px, transparent 1px 2.75rem),
+        repeating-linear-gradient(to bottom, rgb(198 168 124 / 0.16) 0 1px, transparent 1px 2.75rem);
+}
+
+/* Stacked panels need visible overflow on ancestors for position: sticky. */
+[data-panel] {
+    position: sticky;
+    top: 0;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+    html:not(.motion-ready) [data-reveal="clip"]:not([data-revealed]) img {
+        animation: reveal-failsafe 0s 4s forwards;
+    }
+}
+
+.loader-logo {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: loader-logo 1.2s var(--ease-club) 0.1s forwards;
+}
+
+@keyframes loader-logo {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loader-logo {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* FAQ height animation — progressive enhancement (Chromium 131+); others just toggle. */
+@supports selector(::details-content) {
+    :root {
+        interpolate-size: allow-keywords;
+    }
+
+    details.faq::details-content {
+        block-size: 0;
+        overflow: clip;
+        transition:
+            block-size 0.6s var(--ease-club),
+            content-visibility 0.6s allow-discrete;
+    }
+
+    details.faq[open]::details-content {
+        block-size: auto;
+    }
+}
+
+/* ───────────────────────── Tonal rhythm ───────────────────────── */
+
+/*
+ * Ivory "hanji paper" sections. Remaps the colour tokens inside the section, so every
+ * component (text-heading, border-line, text-accent, …) adapts with no extra classes.
+ * Accent is deepened to #7A5E38 here — #C6A87C on ivory fails WCAG AA for small text.
+ */
+@utility theme-ivory {
+    --color-bg: #f4f1ea;
+    --color-surface: #ebe6db;
+    --color-surface-2: #e2dccf;
+    --color-heading: #141619;
+    --color-body: #4a4842;
+    --color-muted: #6e6a62;
+    --color-accent: #7a5e38;
+    --color-accent-soft: #5f4829;
+    --color-line: rgb(20 22 25 / 0.14);
+    background-color: var(--color-bg);
+    color: var(--color-body);
+
+    & ::selection {
+        background-color: #141619;
+        color: #f4f1ea;
+    }
+
+    &.grain::before {
+        filter: invert(1);
+        opacity: 0.09;
+    }
+}
+
+/*
+ * Lamp glow: a soft, static champagne light. Not an animated gradient blob — it should
+ * read as warm light in a room. Position with --gx / --gy, size with --gs.
+ */
+@utility glow-lamp {
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+            ellipse var(--gs, 55%) calc(var(--gs, 55%) * 0.8) at var(--gx, 20%) var(--gy, 70%),
+            rgb(198 168 124 / var(--ga, 0.12)),
+            transparent 70%
+        );
     }
 }

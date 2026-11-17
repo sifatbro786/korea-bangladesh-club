@@ -20,6 +20,8 @@ export default function ClubImage({
     sizes = "100vw",
     fill = true,
     preload = false,
+    quality,
+    eager = false,
     fade = false,
     className = "",
     imgClassName = "",
@@ -42,6 +44,8 @@ export default function ClubImage({
                 alt={media.alt}
                 sizes={sizes}
                 preload={preload}
+                {...(quality ? { quality } : {})}
+                {...(eager && !preload ? { loading: "eager" } : {})}
                 {...(fill ? { fill: true } : { width: media.width, height: media.height })}
                 {...(media.blurDataURL
                     ? { placeholder: "blur", blurDataURL: media.blurDataURL }
