@@ -129,6 +129,12 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 41. **Fonts are self-hosted** (`next/font/local`, `app/fonts/*.woff2`, from the Fontsource latin variable builds). `next/font/google` downloads every subset at compile time; on Sifat's network a Google Sans file timed out and `next dev` returned 500 ("Can't resolve @vercel/turbopack-next/internal/font/google/font"). Now builds need no network. To swap a font: drop the woff2 in `app/fonts/` and change `layout.js`.
 42. **Hero diptych photos are Sifat's own picks from Pexels** (2026-11-17), self-hosted: `public/images/korea.jpg` (rain-washed Seoul alley at night with Hangul neon, Nuhyil Ahammed) and `public/images/dhaka.jpg` (elevated metro rail curving between towers, Siam Chowdhury). Media ids `hero-seoul-alley` / `hero-dhaka-metro`, `source: "pexels"`; Pexels credits now show in the Gallery credits list alongside Unsplash. (Tried before: Unsplash Yeouido night, N Seoul Tower sunset, a street-level MRT shot.) On mobile the Dhaka caption is hidden — that pane sits under the title and body copy.
 43. **Hero/header legibility:** each hero pane has a top scrim (dark → transparent, under the caption) so the header and the city captions stay readable over bright skies; captions are `text-heading` with a soft text-shadow (were accent/muted and vanished on the Seoul sunset). Header tagline is sentence case 13px `text-heading/80` (was 10px tracked caps in `muted`).
+44. **Hero has no divider — cursor split (Sifat chose it; a dashed route arc was rejected as not award-level):**
+    - Desktop: both panes are 70% wide and overlap; the Dhaka pane dissolves in (soft ~5vw mask edge) at `--split`, which eases towards the cursor in `HeroIntro` (30–70%; hovering a city opens it up; rAF runs only while moving). Off on touch, mobile and reduced motion (rests at 50%).
+    - Mobile: panes stacked, the lower one dissolves into the upper (no line).
+    - City names "Seoul" / "Dhaka" (display-md + coords) sit large on their own sides — Seoul top-left, Dhaka top-right, aligned to `container-club` — and never move (Sifat). The figcaptions stay for screen readers; Seoul's shows on mobile.
+    - Hero kicker ("A private members' club in Dhaka") removed at Sifat's request; `Hero.js` renders a kicker only if content has one.
+    - `components/home/HeroRoute.js` is the unused arc experiment — delete it.
 
 ## Open items (waiting on client/Sifat)
 - Logo as SVG or high-res transparent PNG.

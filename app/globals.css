@@ -482,18 +482,33 @@ html.menu-open {
     transition: transform 2.6s var(--ease-club);
 }
 
-.hero-seam {
-    transform-origin: top center;
-    transition: transform 1.6s var(--ease-club) 0.2s;
+/* No divider. Mobile: the panes are stacked and the lower one dissolves into the upper.
+   Desktop: both panes are 70% wide (Seoul left, Dhaka right, overlapping 30–70%); the Dhaka pane fades in
+   around --split (viewport %, 30–70, driven by the cursor in HeroIntro). The mask is relative to the Dhaka
+   pane, which starts at 30% of the viewport, hence the remap. */
+#hero {
+    --split: 50%;
+    --hero-blend-y: 14svh;
+}
+
+.hero-pane + .hero-pane {
+    margin-top: calc(var(--hero-blend-y) * -1);
+    height: calc(100% + var(--hero-blend-y));
+    mask-image: linear-gradient(to bottom, transparent, black var(--hero-blend-y));
+}
+
+@media (min-width: 48rem) {
+    .hero-pane + .hero-pane {
+        --edge: calc((var(--split) - 30%) * 10 / 7);
+        margin-top: 0;
+        height: auto;
+        mask-image: linear-gradient(to right, transparent calc(var(--edge) - 2.5vw), black calc(var(--edge) + 2.5vw));
+    }
 }
 
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
     #hero:not([data-intro="play"]) .hero-pane img {
         transform: scale(1.08);
-    }
-
-    #hero:not([data-intro="play"]) .hero-seam {
-        transform: scaleY(0);
     }
 
     .hero-fade {

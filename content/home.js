@@ -6,7 +6,6 @@
 
 export const home = {
     hero: {
-        kicker: "A private members’ club in Dhaka",
         title: ["Two nations.", "One table."],
         body: "The Korea Bangladesh Business & Cultural Club brings together the people building trade, investment and friendship between Seoul and Dhaka — in one room, around one table.",
         cta: { label: "Discover the club", href: "#intro" },
