@@ -4,7 +4,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 
 ## Project snapshot
 - Next.js 16.4.6 (App Router, JS), React 19.3, Tailwind v4.3 (via `@tailwindcss/turbopack`), React Compiler on, `cacheComponents` + `partialPrefetching` on.
-- Fonts: Hahmlet (display) + Google Sans (UI/body) via `next/font/google`, latin only.
+- Fonts: Hahmlet (display) + Google Sans (UI/body), self-hosted via `next/font/local` from `app/fonts/` (variable woff2, latin only, OFL licences beside them).
 - Design tokens: `app/globals.css` (`@theme`); docs in `DESIGN.md`.
 - Dependencies added: `lenis` 1.3.27, `gsap` 3.15.1 (exact-pinned).
 
@@ -126,6 +126,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 
 39. **Eyebrow redesign (Sifat: "AI slop"):** `SectionLabel` is now sentence case, 14px/500, normal tracking, with a hairline lattice lozenge — no numbers, no dash, no tracked caps (`eyebrow` utility). Hero/"Next on the calendar"/"Latest story" kickers use the same utility. Tracked-caps `text-label` stays for meta data only (categories, dates, form labels). `index` prop removed.
 40. **Display font is Hahmlet** (Sifat, 2026-11-17; Cormorant read as a stock "luxury template" serif). Korean-foundry serif = real Korea link. No italic: title accent lines are colour-only, `font-synthesis-style: none` on `html`. Display scale re-tuned (lg 2.6–6rem, md 2.1–3.6rem, sm 1.75–2.3rem, tracking -0.01em) and the hard-coded display clamps (Pillars words, event dates, footer marquee, quotes, 404) scaled ~0.8. Membership "Apply" + Gallery credits grids now split at `lg` (headings overflowed at 768). Overflow scan: 0 issues on 11 pages × 360/390/768/1024/1440.
+41. **Fonts are self-hosted** (`next/font/local`, `app/fonts/*.woff2`, from the Fontsource latin variable builds). `next/font/google` downloads every subset at compile time; on Sifat's network a Google Sans file timed out and `next dev` returned 500 ("Can't resolve @vercel/turbopack-next/internal/font/google/font"). Now builds need no network. To swap a font: drop the woff2 in `app/fonts/` and change `layout.js`.
 
 ## Open items (waiting on client/Sifat)
 - Logo as SVG or high-res transparent PNG.

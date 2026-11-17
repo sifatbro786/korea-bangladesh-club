@@ -1,22 +1,28 @@
-import { Google_Sans, Hahmlet } from "next/font/google";
+import localFont from "next/font/local";
 import InitialLoader from "@/components/loader/InitialLoader";
 import { loaderScript } from "@/components/loader/loaderScript";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import InlineScript from "@/components/ui/InlineScript";
 import "./globals.css";
 
-// Display serif — headings only, used at >= 32px. Hahmlet (Korean foundry, variable 100–900) has no
-// italic: accents are carried by colour, and faux italics are disabled in globals.css.
-const hahmlet = Hahmlet({
+// Fonts are self-hosted (app/fonts, latin subset, OFL — licences alongside) so dev and production
+// builds never depend on reaching Google's font servers.
+
+// Display serif — headings only, used at >= 28px. Hahmlet (Korean foundry) has no italic:
+// accents are carried by colour, and faux italics are disabled in globals.css.
+const hahmlet = localFont({
+    src: "./fonts/hahmlet-latin-wght.woff2",
     variable: "--font-hahmlet",
-    subsets: ["latin"],
+    weight: "100 900",
     display: "swap",
+    adjustFontFallback: "Times New Roman",
 });
 
 // UI / body sans.
-const googleSans = Google_Sans({
+const googleSans = localFont({
+    src: "./fonts/google-sans-latin-wght.woff2",
     variable: "--font-google-sans",
-    subsets: ["latin"],
+    weight: "400 700",
     display: "swap",
 });
 

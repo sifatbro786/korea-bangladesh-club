@@ -43,8 +43,8 @@ Tailwind's default palette is wiped (`--color-*: initial`), so `orange-500`, `in
 
 ## Typography
 
-- **Display:** Hahmlet (variable 100–900, Korean foundry, via `next/font/google`) — headings only, never below 28px. Weight 300–400. Replaced Cormorant Garamond on 2026-11-17 (Sifat: too common in "luxury" templates). **No italic exists:** the accent line of a title is set in `text-accent`, upright. `font-synthesis-style: none` on `html` stops browsers faking italics. Hahmlet sets ~20% wider than Cormorant, so the display scale is smaller and tracking is `-0.01em`.
-- **UI / body:** Google Sans (variable, 400–700, via `next/font/google`) — clear, warm and contemporary; replaced Jost on 2026-11-17 (Sifat). Base 17px / 1.7.
+- **Display:** Hahmlet (variable 100–900, Korean foundry, self-hosted from `app/fonts/` via `next/font/local`) — headings only, never below 28px. Weight 300–400. Replaced Cormorant Garamond on 2026-11-17 (Sifat: too common in "luxury" templates). **No italic exists:** the accent line of a title is set in `text-accent`, upright. `font-synthesis-style: none` on `html` stops browsers faking italics. Hahmlet sets ~20% wider than Cormorant, so the display scale is smaller and tracking is `-0.01em`.
+- **UI / body:** Google Sans (variable, 400–700, self-hosted from `app/fonts/` via `next/font/local`) — clear, warm and contemporary; replaced Jost on 2026-11-17 (Sifat). Base 17px / 1.7.
 - **Eyebrows** (`SectionLabel`, hero/page kickers): `eyebrow` utility — 14px, weight 500, sentence case, normal tracking, led by a tiny hairline lattice lozenge. **No section numbers, no dash lines, no tracked caps** (that pattern read as templated/AI).
 - Meta labels (categories, dates, venue, form labels): `text-label` (11px), uppercase, `tracking-label` (0.24em), colour `accent` or `muted`. Data only — never as a section eyebrow.
 - Scale: `text-display-lg` (hero), `text-display-md` (section titles), `text-display-sm` (sub-titles), `text-lg`, `text-base`, `text-sm`, `text-label`.
