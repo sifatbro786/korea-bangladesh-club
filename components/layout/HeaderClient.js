@@ -9,6 +9,7 @@ import Arrow from "@/components/ui/Arrow";
 
 const SOLID_AFTER = 24; // px scrolled before the header gets a background
 const HIDE_AFTER = 480; // px scrolled before hide-on-scroll-down kicks in
+const DIRECTION_PX = 12; // continuous px in one direction before hiding/showing
 
 function Wordmark({ logo, compact }) {
     return (
@@ -43,14 +44,28 @@ export default function HeaderClient({ items, cta, logo }) {
     const buttonRef = useRef(null);
 
     // Scroll state: solid background + hide on scroll down, show on scroll up.
+    // Direction uses hysteresis: smooth scroll (Lenis) eases out with 0–1px steps, and a
+    // plain `y > lastY` check flipped hidden/visible on those frames (header "dropped" briefly).
+    // Now the header only changes after DIRECTION_PX of continuous movement; a 0px frame
+    // never changes state.
     useEffect(() => {
         let lastY = window.scrollY;
+        let travel = 0; // signed px moved in the current direction
         let ticking = false;
         const update = () => {
             const y = window.scrollY;
-            setSolid(y > SOLID_AFTER);
-            setHidden(y > HIDE_AFTER && y > lastY);
+            const delta = y - lastY;
             lastY = y;
+            setSolid(y > SOLID_AFTER);
+
+            if (y <= HIDE_AFTER) {
+                travel = 0;
+                setHidden(false);
+            } else if (delta !== 0) {
+                travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+                if (travel > DIRECTION_PX) setHidden(true);
+                else if (travel < -DIRECTION_PX) setHidden(false);
+            }
             ticking = false;
         };
         const onScroll = () => {
