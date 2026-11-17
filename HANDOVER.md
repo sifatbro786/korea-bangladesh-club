@@ -120,6 +120,10 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
     - Measured in a sandbox with fonts mocked and Unsplash replaced by local photos — re-run Lighthouse on the real deployment (real fonts + Unsplash) and set `SITE_URL`.
 35. **SEO:** set `SITE_URL` in production (sitemap, robots, canonicals, OG and JSON-LD URLs all derive from it). Submit `/sitemap.xml` to Google Search Console after launch.
 
+36. **Footer credit:** "Developed by STR Solutions LTD" (https://strsltd.com, new tab) after "All rights reserved." in `Footer.js`.
+37. **ESLint:** `@next/next/no-img-element` is off only for `**/opengraph-image.js` / `**/twitter-image.js` in `eslint.config.mjs` (satori needs plain `<img>`). `npm run lint` is clean.
+38. **Header hide-on-scroll fix:** direction now uses 12px hysteresis (`DIRECTION_PX`); 0px frames never change state. The old `y > lastY` check flipped the header during Lenis ease-out (it dropped ~17px for a moment). Verified: one hide on scroll down, one show on scroll up.
+
 ## Open items (waiting on client/Sifat)
 - Logo as SVG or high-res transparent PNG.
 - Name and title of the person in `leader-portrait-01.jpg`; committee member list.
@@ -128,7 +132,13 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 - **Draft copy to confirm/replace** (`draft: true` in `content/home.js`): the featured event (12 Dec 2026, Winter Session), membership tiers, the President's quote, two clubhouse space descriptions. President's name is `null` (UI shows the role only).
 - Committee names (About page shows "To be confirmed"), real event calendar, tier fees, membership process — all `draft: true`.
 - Logo is a raster cut-out (324px). Ask the club for the SVG / original artwork for crisp large sizes.
-- Unsplash photo credits should be listed on the Gallery page (step 15) — credit data is already in `content/media.js`.
+
+## Phase 2 — first decisions/inputs needed
+- MongoDB host (Atlas vs on the VPS) and image storage (VPS disk vs S3/Cloudinary).
+- Dependency approvals: `mongoose`, `zod`, password hashing (`argon2` or `bcryptjs`), email (`nodemailer`/Resend).
+- Admin roles (super_admin / editor) and who gets accounts.
+- Where form submissions go (secretariat email address).
+- Deployment target (STR VPS or client's Hostinger) and the domain → `SITE_URL`.
 
 ## Known caveats
 - `.next/kbbcc-src.tgz` is a throwaway source snapshot used for browser testing; it is inside the gitignored build folder and disappears on the next `next build`/clean.
