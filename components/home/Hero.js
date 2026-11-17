@@ -15,14 +15,16 @@ export default function Hero({ data }) {
                 {[seoul, dhaka].map((pane, i) => (
                     <figure key={pane.city} className="hero-pane relative overflow-hidden">
                         <ClubImage media={pane.image} preload={i === 0} eager quality={60} sizes="(min-width: 768px) 50vw, 100vw" />
+                        {/* Top scrim: keeps the header and city caption legible over bright skies. */}
+                        <div aria-hidden="true" className="absolute inset-x-0 top-0 z-[5] h-72 bg-[linear-gradient(to_bottom,rgb(11_12_14/0.6),rgb(11_12_14/0.25)_55%,transparent)]" />
                         <figcaption
-                            className={`hero-fade absolute top-24 z-10 text-label uppercase tracking-label text-heading/80 md:top-28 ${
-                                i === 0 ? "left-5 md:left-10" : "right-5 text-right md:right-10"
+                            className={`hero-fade absolute top-24 z-10 text-label uppercase tracking-label text-heading [text-shadow:0_1px_10px_rgb(11_12_14/0.7)] md:top-28 ${
+                                i === 0 ? "left-5 md:left-10" : "right-5 hidden text-right md:right-10 md:block"
                             }`}
                             style={{ "--d": `${0.5 + i * 0.15}s` }}
                         >
-                            <span className="block text-accent">{pane.city}</span>
-                            <span className="mt-1 block text-muted">{pane.coords}</span>
+                            <span className="block font-medium">{pane.city}</span>
+                            <span className="mt-1 block text-heading/75">{pane.coords}</span>
                         </figcaption>
                     </figure>
                 ))}

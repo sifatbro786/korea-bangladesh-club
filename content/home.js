@@ -11,7 +11,7 @@ export const home = {
         body: "The Korea Bangladesh Business & Cultural Club brings together the people building trade, investment and friendship between Seoul and Dhaka — in one room, around one table.",
         cta: { label: "Discover the club", href: "#intro" },
         panes: [
-            { image: "hero-seoul-night", city: "Seoul", coords: "37.57° N · 126.98° E" },
+            { image: "hero-seoul-alley", city: "Seoul", coords: "37.57° N · 126.98° E" },
             { image: "hero-dhaka-metro", city: "Dhaka", coords: "23.81° N · 90.41° E" },
         ],
     },

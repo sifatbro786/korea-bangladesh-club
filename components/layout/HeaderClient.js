@@ -27,7 +27,7 @@ function Wordmark({ logo, compact }) {
             ) : null}
             <span className="font-display text-[1.75rem] leading-none tracking-[0.18em] text-heading">KBBCC</span>
             <span aria-hidden="true" className="hidden h-7 w-px bg-line xl:block" />
-            <span className="hidden max-w-[13rem] text-[0.625rem] uppercase leading-snug tracking-[0.2em] text-muted xl:block">
+            <span className="hidden max-w-[12rem] text-[0.8125rem] leading-snug text-heading/80 xl:block">
                 Korea Bangladesh Business &amp; Cultural Club
             </span>
             <span className="sr-only">, home</span>

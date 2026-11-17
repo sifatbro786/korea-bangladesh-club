@@ -29,7 +29,7 @@ export default async function GalleryPage() {
                                 With thanks to the photographers.
                             </SplitHeading>
                             <p className="mt-6 max-w-[36ch] text-sm">
-                                Club photographs are by members and guests. Additional photographs are used under the Unsplash License.
+                                Club photographs are by members and guests. Additional photographs are used under the Unsplash and Pexels licences.
                             </p>
                         </div>
                         <ul className="border-t border-line lg:col-span-7 lg:col-start-6">

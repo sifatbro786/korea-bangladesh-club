@@ -206,30 +206,37 @@ export const media = {
             "data:image/webp;base64,UklGRj4AAABXRUJQVlA4IDIAAACwAQCdASoIAAYAA4BaJQBOgCHXYJAAAP2/3QlxnvPPQ+oj9LvsjXjWjhwjhOaifmAAAA==",
     },
 
-    // ── Unsplash (free Unsplash License). Intrinsic size unknown → render in fill mode only.
+    // ── Hero diptych: Pexels photos supplied by Sifat (free Pexels licence), self-hosted in public/images.
 
-    "hero-seoul-night": {
-        id: "hero-seoul-night",
-        src: unsplashSrc("photo-1556513584-fc549ffb7577"),
-        alt: "Long-exposure night view of Yeouido, Seoul, with light trails along the Han River",
-        width: 2400,
-        height: 1600,
-        objectPosition: "center 60%",
+    "hero-seoul-alley": {
+        id: "hero-seoul-alley",
+        src: "/images/korea.jpg",
+        alt: "A rain-washed Seoul alley at night, lit by Hangul neon signs and shopfronts",
+        width: 1920,
+        height: 2880,
+        objectPosition: "center 55%",
         grade: "soft",
-        source: "unsplash",
-        credit: { name: "Ethan Brooke", url: "https://unsplash.com/photos/city-during-nighttime-vbk7AyX3CPE" },
+        source: "pexels",
+        credit: { name: "Nuhyil Ahammed", url: "https://www.pexels.com/photo/28232142/" },
+        blurDataURL:
+            "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAAAwAgCdASoIAAwAA4BaJbACdAEXtjCBI3GYAAD+733Vetyr9anQYUSDcHZlSPFnqV7aP2Bx3vndCQVTKAli77aolcBtngll9DKGJagt8AvYAAAA",
     },
     "hero-dhaka-metro": {
         id: "hero-dhaka-metro",
-        src: unsplashSrc("photo-1737279044038-fed439e5b90a"),
-        alt: "Dhaka seen from a high-rise, with the elevated metro rail cutting through the city",
-        width: 3772,
-        height: 5658,
-        objectPosition: "center 40%",
+        src: "/images/dhaka.jpg",
+        alt: "Dhaka's elevated metro rail curving between glass towers above a busy street",
+        width: 1920,
+        height: 2880,
+        objectPosition: "center 50%",
         grade: "soft",
-        source: "unsplash",
-        credit: { name: "Tatiana Mokhova", url: "https://unsplash.com/photos/g8LK4aGoXSM" },
+        source: "pexels",
+        credit: { name: "Siam Chowdhury", url: "https://www.pexels.com/photo/17214910/" },
+        blurDataURL:
+            "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAQAgCdASoIAAwAA4BaJYgCdADdYrDBJXIAAPzL1yrixGIkXeqkN/NWAg1Qxgkf1x72GrE54tdc8l83hgIor92PB5tEsAam1oJXDgi4AAA=",
     },
+
+    // ── Unsplash (free Unsplash License). Intrinsic size unknown → render in fill mode only.
+
     "trade-harbour-twilight": {
         id: "trade-harbour-twilight",
         src: unsplashSrc("photo-1747115632855-ae7ae83acec2"),
