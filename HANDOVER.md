@@ -132,7 +132,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 44. **Hero has no divider — cursor split (Sifat chose it; a dashed route arc was rejected as not award-level):**
     - Desktop: both panes are 70% wide and overlap; the Dhaka pane dissolves in (soft ~5vw mask edge) at `--split`, which eases towards the cursor in `HeroIntro` (30–70%; hovering a city opens it up; rAF runs only while moving). Off on touch, mobile and reduced motion (rests at 50%).
     - Mobile: panes stacked, the lower one dissolves into the upper (no line).
-    - City names "Seoul" / "Dhaka" (display-md + coords) sit large on their own sides — Seoul top-left, Dhaka top-right, aligned to `container-club` — and never move (Sifat). The figcaptions stay for screen readers; Seoul's shows on mobile.
+    - City names "Seoul" / "Dhaka" (display-sm + coords; Sifat asked for smaller than display-md) sit large on their own sides — Seoul top-left, Dhaka top-right, aligned to `container-club` — and never move (Sifat). The figcaptions stay for screen readers; Seoul's shows on mobile.
     - Hero kicker ("A private members' club in Dhaka") removed at Sifat's request; `Hero.js` renders a kicker only if content has one.
     - `components/home/HeroRoute.js` is the unused arc experiment — delete it.
 

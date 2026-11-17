@@ -52,8 +52,8 @@ export default function Hero({ data }) {
                             className={`hero-fade whitespace-nowrap [text-shadow:0_2px_18px_rgb(11_12_14/0.6)] ${i === 1 ? "text-right" : ""}`}
                             style={{ "--d": `${0.55 + i * 0.15}s` }}
                         >
-                            <p className="font-display text-display-md font-light text-heading">{pane.city}</p>
-                            <p className="mt-3 text-label uppercase tracking-label text-heading/75">{pane.coords}</p>
+                            <p className="font-display text-display-sm font-light text-heading">{pane.city}</p>
+                            <p className="mt-2 text-label uppercase tracking-label text-heading/75">{pane.coords}</p>
                         </div>
                     ))}
                 </div>
