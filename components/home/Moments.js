@@ -23,7 +23,7 @@ export default function Moments({ data }) {
                 className="absolute -left-10 -top-24 size-72 text-accent opacity-[0.1] md:-left-24 md:-top-40 md:size-[30rem]"
             />
             <div className="relative">
-                <SectionLabel index="07">{data.label}</SectionLabel>
+                <SectionLabel>{data.label}</SectionLabel>
                 <SplitHeading id="moments-title" className="mt-8 text-display-md font-light">
                     {data.title}
                 </SplitHeading>

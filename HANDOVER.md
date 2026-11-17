@@ -4,7 +4,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 
 ## Project snapshot
 - Next.js 16.4.6 (App Router, JS), React 19.3, Tailwind v4.3 (via `@tailwindcss/turbopack`), React Compiler on, `cacheComponents` + `partialPrefetching` on.
-- Fonts: Cormorant Garamond (display) + Jost (UI/body) via `next/font/google`, latin only.
+- Fonts: Hahmlet (display) + Google Sans (UI/body) via `next/font/google`, latin only.
 - Design tokens: `app/globals.css` (`@theme`); docs in `DESIGN.md`.
 - Dependencies added: `lenis` 1.3.27, `gsap` 3.15.1 (exact-pinned).
 
@@ -58,7 +58,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 - **Phase 3 — E-commerce:** single-store B2B/B2C, managed by the club, connected to B&F's Kmarket.com.
 
 ## Decisions (locked)
-1. **Body font is Jost, not Plus Jakarta Sans** — Jakarta reads as a generic AI default; Jost gives Art-Deco club character and pairs with Cormorant.
+1. **Body font is Google Sans** (Sifat, 2026-11-17; was Jost, originally Plus Jakarta Sans — rejected as an AI default). Variable 400–700, so nothing below 400 in UI text.
 2. **Images:** use the club photos wherever they fit; fill the gaps with Unsplash. All images are routed through the content layer so the admin dashboard can replace them in Phase 2.
 3. **Animation library strategy:** avoid Framer Motion's stock look. Plan: GSAP (core + ScrollTrigger, plus SplitText where needed; all free since 2025) **loaded lazily in client islands only** — never in the critical path — synced with Lenis's RAF, with `gsap.matchMedia()` for reduced-motion. Simple reveals use CSS + IntersectionObserver with no JS library. anime.js v4 is the fallback if GSAP's bundle cost shows up in Lighthouse. Approved by Sifat and implemented in Step 3 (see decision 9).
 4. **Initial loader (4–5s), done in a Lighthouse-safe way:**
@@ -123,6 +123,9 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 36. **Footer credit:** "Developed by STR Solutions LTD" (https://strsltd.com, new tab) after "All rights reserved." in `Footer.js`.
 37. **ESLint:** `@next/next/no-img-element` is off only for `**/opengraph-image.js` / `**/twitter-image.js` in `eslint.config.mjs` (satori needs plain `<img>`). `npm run lint` is clean.
 38. **Header hide-on-scroll fix:** direction now uses 12px hysteresis (`DIRECTION_PX`); 0px frames never change state. The old `y > lastY` check flipped the header during Lenis ease-out (it dropped ~17px for a moment). Verified: one hide on scroll down, one show on scroll up.
+
+39. **Eyebrow redesign (Sifat: "AI slop"):** `SectionLabel` is now sentence case, 14px/500, normal tracking, with a hairline lattice lozenge — no numbers, no dash, no tracked caps (`eyebrow` utility). Hero/"Next on the calendar"/"Latest story" kickers use the same utility. Tracked-caps `text-label` stays for meta data only (categories, dates, form labels). `index` prop removed.
+40. **Display font is Hahmlet** (Sifat, 2026-11-17; Cormorant read as a stock "luxury template" serif). Korean-foundry serif = real Korea link. No italic: title accent lines are colour-only, `font-synthesis-style: none` on `html`. Display scale re-tuned (lg 2.6–6rem, md 2.1–3.6rem, sm 1.75–2.3rem, tracking -0.01em) and the hard-coded display clamps (Pillars words, event dates, footer marquee, quotes, 404) scaled ~0.8. Membership "Apply" + Gallery credits grids now split at `lg` (headings overflowed at 768). Overflow scan: 0 issues on 11 pages × 360/390/768/1024/1440.
 
 ## Open items (waiting on client/Sifat)
 - Logo as SVG or high-res transparent PNG.

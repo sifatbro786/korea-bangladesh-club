@@ -12,7 +12,7 @@ export default function Visit({ data, site }) {
         <section aria-labelledby="visit-title" className="theme-ivory grain relative">
             <div className="container-club section-y relative grid gap-16 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-6">
-                    <SectionLabel index="08">{data.label}</SectionLabel>
+                    <SectionLabel>{data.label}</SectionLabel>
                     <SplitHeading id="visit-title" className="mt-8 max-w-[12ch] text-display-md font-light">
                         {data.title}
                     </SplitHeading>

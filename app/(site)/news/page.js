@@ -33,7 +33,7 @@ export default async function NewsPage() {
                             </Link>
                         </Reveal>
                         <Reveal delay={120} className="lg:col-span-4 lg:col-start-9">
-                            <p className="text-label uppercase tracking-label text-accent">
+                            <p className="eyebrow text-accent">
                                 Latest story · {featured.dateLabel}
                             </p>
                             <h2 className="mt-6 text-display-md font-light">

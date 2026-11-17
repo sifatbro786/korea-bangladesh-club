@@ -7,7 +7,7 @@ export default function Intro({ data }) {
     return (
         <section id="intro" aria-labelledby="intro-title" className="theme-ivory grain relative scroll-mt-16">
             <div className="container-club section-y relative">
-            <SectionLabel index="01">{data.label}</SectionLabel>
+            <SectionLabel>{data.label}</SectionLabel>
 
             <div className="mt-12 grid gap-12 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-8 lg:col-span-7">

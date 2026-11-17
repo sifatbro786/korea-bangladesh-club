@@ -94,7 +94,7 @@ export default function EventsBrowser({ categories, upcoming, past }) {
                                     className="group grid items-center gap-4 py-8 transition-colors duration-500 hover:bg-surface md:grid-cols-12 md:gap-8 md:px-4"
                                 >
                                     <span className="flex items-baseline gap-4 md:col-span-3">
-                                        <span className="font-display text-[clamp(3rem,5vw,4.5rem)] font-light leading-none text-heading">
+                                        <span className="font-display text-[clamp(2.5rem,4vw,3.75rem)] font-light leading-none text-heading">
                                             {e.dateLabel.day}
                                         </span>
                                         <span className="text-label uppercase leading-relaxed tracking-label text-muted">

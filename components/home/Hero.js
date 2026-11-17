@@ -42,12 +42,12 @@ export default function Hero({ data }) {
             <div aria-hidden="true" className="absolute inset-x-0 top-1/2 -z-10 h-px bg-line md:hidden" />
 
             <div className="hero-content container-club pb-14 pt-40 md:pb-20">
-                <p className="hero-fade text-label uppercase tracking-label text-accent" style={{ "--d": "0.1s" }}>
+                <p className="hero-fade eyebrow text-accent" style={{ "--d": "0.1s" }}>
                     {data.kicker}
                 </p>
                 <h1 id="hero-title" className="mt-6 text-display-lg font-light">
                     <span className="block">{data.title[0]}</span>
-                    <span className="block italic text-accent">{data.title[1]}</span>
+                    <span className="block text-accent">{data.title[1]}</span>
                 </h1>
 
                 <div className="mt-10 grid gap-10 md:mt-14 md:grid-cols-12 md:items-end">

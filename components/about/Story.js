@@ -10,7 +10,7 @@ export default function Story({ data }) {
             <div className="grid gap-14 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-5">
                     <div>
-                        <SectionLabel index="01">{data.label}</SectionLabel>
+                        <SectionLabel>{data.label}</SectionLabel>
                         <SplitHeading id="story-title" className="mt-8 text-display-md font-light">
                             {data.title}
                         </SplitHeading>

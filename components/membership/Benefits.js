@@ -8,7 +8,7 @@ export default function Benefits({ data }) {
             <div className="container-club section-y relative">
             <div className="grid gap-8 md:grid-cols-12">
                 <div className="md:col-span-4">
-                    <SectionLabel index="01">{data.label}</SectionLabel>
+                    <SectionLabel>{data.label}</SectionLabel>
                 </div>
                 <SplitHeading id="benefits-title" className="max-w-[20ch] text-display-md font-light md:col-span-8">
                     {data.title}

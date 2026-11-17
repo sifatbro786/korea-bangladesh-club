@@ -1,21 +1,21 @@
-import { Cormorant_Garamond, Jost } from "next/font/google";
+import { Google_Sans, Hahmlet } from "next/font/google";
 import InitialLoader from "@/components/loader/InitialLoader";
 import { loaderScript } from "@/components/loader/loaderScript";
 import SmoothScroll from "@/components/motion/SmoothScroll";
 import InlineScript from "@/components/ui/InlineScript";
 import "./globals.css";
 
-// Display serif — headings only, used at >= 32px.
-const cormorant = Cormorant_Garamond({
-    variable: "--font-cormorant",
+// Display serif — headings only, used at >= 32px. Hahmlet (Korean foundry, variable 100–900) has no
+// italic: accents are carried by colour, and faux italics are disabled in globals.css.
+const hahmlet = Hahmlet({
+    variable: "--font-hahmlet",
     subsets: ["latin"],
-    style: ["normal", "italic"],
     display: "swap",
 });
 
 // UI / body sans.
-const jost = Jost({
-    variable: "--font-jost",
+const googleSans = Google_Sans({
+    variable: "--font-google-sans",
     subsets: ["latin"],
     display: "swap",
 });
@@ -47,7 +47,7 @@ export default function RootLayout({ children }) {
     return (
         <html
             lang="en"
-            className={`${cormorant.variable} ${jost.variable} antialiased`}
+            className={`${hahmlet.variable} ${googleSans.variable} antialiased`}
             // data-loader is set by the inline script before hydration
             suppressHydrationWarning
         >

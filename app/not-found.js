@@ -30,10 +30,10 @@ export default function NotFound() {
                     <span
                         aria-hidden="true"
                         data-text="404"
-                        className="mt-8 block font-display text-[clamp(7rem,3rem+18vw,18rem)] font-light leading-[0.8] text-heading/10 before:content-[attr(data-text)]"
+                        className="mt-8 block font-display text-[clamp(5.5rem,2.5rem+14vw,14rem)] font-light leading-[0.8] text-heading/10 before:content-[attr(data-text)]"
                     />
                     <h1 className="-mt-6 max-w-[14ch] text-display-md font-light md:-mt-12">
-                        This room is not on the <span className="italic text-accent">floor plan.</span>
+                        This room is not on the <span className="text-accent">floor plan.</span>
                     </h1>
                     <p className="mt-8 max-w-[44ch]">
                         The page you were looking for has moved, or never existed. These are the rooms people usually look for.

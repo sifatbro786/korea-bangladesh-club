@@ -8,7 +8,7 @@ export default function Tiers({ data }) {
     return (
         <section aria-labelledby="tiers-title" className="border-t border-line bg-surface">
             <div className="container-club section-y">
-                <SectionLabel index="02">{data.label}</SectionLabel>
+                <SectionLabel>{data.label}</SectionLabel>
                 <SplitHeading id="tiers-title" className="mt-8 text-display-md font-light">
                     {data.title}
                 </SplitHeading>

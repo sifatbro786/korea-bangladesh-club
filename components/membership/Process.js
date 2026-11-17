@@ -6,7 +6,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
 export default function Process({ data }) {
     return (
         <section aria-labelledby="process-title" className="container-club section-y" data-process>
-            <SectionLabel index="03">{data.label}</SectionLabel>
+            <SectionLabel>{data.label}</SectionLabel>
             <SplitHeading id="process-title" className="mt-8 max-w-[16ch] text-display-md font-light">
                 {data.title}
             </SplitHeading>

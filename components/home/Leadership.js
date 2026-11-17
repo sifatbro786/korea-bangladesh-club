@@ -9,7 +9,7 @@ export default function Leadership({ data }) {
         <section aria-labelledby="leadership-title" className="container-club section-y">
             <div className="grid gap-14 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-4">
-                    <SectionLabel index="06">{data.label}</SectionLabel>
+                    <SectionLabel>{data.label}</SectionLabel>
                     <h2 id="leadership-title" className="sr-only">
                         A message from the President
                     </h2>
@@ -26,7 +26,7 @@ export default function Leadership({ data }) {
                         <span aria-hidden="true" className="block font-display text-[6rem] leading-[0.5] text-accent">
                             &ldquo;
                         </span>
-                        <blockquote className="mt-6 font-display text-[clamp(2rem,1.4rem+2.4vw,3.5rem)] font-light italic leading-[1.15] text-heading">
+                        <blockquote className="mt-6 font-display text-[clamp(1.6rem,1.2rem+1.9vw,2.75rem)] font-light leading-[1.15] text-heading">
                             {data.quote}
                         </blockquote>
                     </Reveal>

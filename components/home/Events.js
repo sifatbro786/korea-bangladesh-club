@@ -16,7 +16,7 @@ export default function Events({ data, upcoming, past }) {
             <div className="container-club section-y">
                 <div className="flex flex-wrap items-end justify-between gap-8">
                     <div>
-                        <SectionLabel index="04">{data.label}</SectionLabel>
+                        <SectionLabel>{data.label}</SectionLabel>
                         <SplitHeading id="events-title" className="mt-8 text-display-md font-light">
                             {data.title}
                         </SplitHeading>
@@ -33,9 +33,9 @@ export default function Events({ data, upcoming, past }) {
                         </Reveal>
 
                         <Reveal delay={150} className="flex flex-col md:col-span-4 md:col-start-9">
-                            <p className="text-label uppercase tracking-label text-accent">Next on the calendar</p>
+                            <p className="eyebrow text-accent">Next on the calendar</p>
                             <p className="mt-8 flex items-end gap-5 border-b border-line pb-6">
-                                <span className="font-display text-[clamp(4.5rem,8vw,7rem)] font-light leading-[0.8] text-heading">
+                                <span className="font-display text-[clamp(3.5rem,6.5vw,5.75rem)] font-light leading-[0.8] text-heading">
                                     {featured.dateLabel.day}
                                 </span>
                                 <span className="pb-1 text-label uppercase tracking-label text-muted">

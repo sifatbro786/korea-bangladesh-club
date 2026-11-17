@@ -49,7 +49,7 @@ function Block({ block }) {
         case "quote":
             return (
                 <figure className="my-6 border-l border-accent pl-8">
-                    <blockquote className="font-display text-[clamp(2rem,1.5rem+1.4vw,2.6rem)] font-light italic leading-snug text-heading">
+                    <blockquote className="font-display text-[clamp(1.6rem,1.25rem+1.1vw,2.1rem)] font-light leading-snug text-heading">
                         {block.text}
                     </blockquote>
                     {block.by ? <figcaption className="mt-4 text-label uppercase tracking-label text-muted">{block.by}</figcaption> : null}

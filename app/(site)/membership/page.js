@@ -29,16 +29,16 @@ export default async function MembershipPage() {
             <Faq data={page.faq} />
 
             <section id="apply" aria-labelledby="apply-title" className="theme-ivory grain relative scroll-mt-16">
-                <div className="container-club section-y relative grid gap-14 md:grid-cols-12 md:gap-8">
-                    <div className="md:col-span-4">
-                        <SectionLabel index="05">{page.form.label}</SectionLabel>
+                <div className="container-club section-y relative grid gap-14 lg:grid-cols-12 lg:gap-8">
+                    <div className="lg:col-span-4">
+                        <SectionLabel>{page.form.label}</SectionLabel>
                         <SplitHeading id="apply-title" className="mt-8 text-display-md font-light">
                             {page.form.title}
                         </SplitHeading>
                         <p className="mt-8 max-w-[36ch]">{page.form.intro}</p>
                         <Ornament align="start" className="mt-10 max-w-48" />
                     </div>
-                    <div className="md:col-span-7 md:col-start-6">
+                    <div className="lg:col-span-7 lg:col-start-6">
                         <ApplicationForm data={page.form} categories={categories} />
                     </div>
                 </div>

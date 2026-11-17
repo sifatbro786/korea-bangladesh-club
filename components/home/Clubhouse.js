@@ -8,7 +8,7 @@ export default function Clubhouse({ data }) {
     return (
         <section aria-labelledby="clubhouse-title" className="border-t border-line bg-bg-warm">
             <div className="container-club section-y">
-                <SectionLabel index="03">{data.label}</SectionLabel>
+                <SectionLabel>{data.label}</SectionLabel>
 
                 <div className="relative mt-12">
                     <Reveal variant="clip">

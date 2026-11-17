@@ -22,8 +22,8 @@ export default async function GalleryPage() {
 
             {credits.length ? (
                 <section aria-labelledby="credits-title" className="theme-ivory grain relative">
-                    <div className="container-club section-y relative grid gap-10 md:grid-cols-12 md:gap-8">
-                        <div className="md:col-span-4">
+                    <div className="container-club section-y relative grid gap-10 lg:grid-cols-12 lg:gap-8">
+                        <div className="lg:col-span-4">
                             <SectionLabel>Photography</SectionLabel>
                             <SplitHeading id="credits-title" className="mt-8 text-display-sm font-light">
                                 With thanks to the photographers.
@@ -32,7 +32,7 @@ export default async function GalleryPage() {
                                 Club photographs are by members and guests. Additional photographs are used under the Unsplash License.
                             </p>
                         </div>
-                        <ul className="border-t border-line md:col-span-7 md:col-start-6">
+                        <ul className="border-t border-line lg:col-span-7 lg:col-start-6">
                             {credits.map((c) => (
                                 <li key={c.url} className="border-b border-line">
                                     <a

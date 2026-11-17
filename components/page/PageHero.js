@@ -4,7 +4,7 @@ import LineArt from "@/components/ui/LineArt";
 import SectionLabel from "@/components/ui/SectionLabel";
 
 /**
- * Inner-page hero: label, two-line display title (second line italic, accent), intro,
+ * Inner-page hero: label, two-line display title (second line in accent), intro,
  * then a wide image. The h1 is the LCP candidate and is never hidden; the image is
  * preloaded and only gets a parallax drift (no clip reveal above the fold).
  */
@@ -27,7 +27,7 @@ export default function PageHero({ label, title, intro, image, children }) {
                 <div className="mt-10 grid gap-10 md:grid-cols-12 md:items-end">
                     <h1 id="page-title" className="text-display-lg font-light md:col-span-8">
                         <span className="block">{first}</span>
-                        {second ? <span className="block italic text-accent">{second}</span> : null}
+                        {second ? <span className="block text-accent">{second}</span> : null}
                     </h1>
                     {intro ? <p className="max-w-[44ch] text-lg text-heading/80 md:col-span-4">{intro}</p> : null}
                 </div>

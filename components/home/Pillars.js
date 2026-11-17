@@ -20,7 +20,7 @@ export default function Pillars({ data }) {
             <div className="container-club relative pb-16 pt-[clamp(5.5rem,11vw,10rem)] md:pb-24">
                 <div className="grid gap-8 md:grid-cols-12">
                     <div className="md:col-span-4">
-                        <SectionLabel index="02">{data.label}</SectionLabel>
+                        <SectionLabel>{data.label}</SectionLabel>
                     </div>
                     <SplitHeading id="pillars-title" className="max-w-[18ch] text-display-md font-light md:col-span-8">
                         {data.title}
@@ -57,10 +57,10 @@ export default function Pillars({ data }) {
 
                                 <div className="grid gap-8 lg:grid-cols-12 lg:items-end">
                                     <div className="lg:col-span-8">
-                                        <span className="font-display text-display-sm italic text-accent">{item.numeral}.</span>
+                                        <span className="font-display text-display-sm text-accent">{item.numeral}.</span>
                                         <h3
                                             id={`pillar-${item.key}`}
-                                            className="mt-2 font-display text-[clamp(3.5rem,1rem+10vw,11.5rem)] font-light leading-[0.85] tracking-[-0.01em]"
+                                            className="mt-2 font-display text-[clamp(2.75rem,0.75rem+8vw,9rem)] font-light leading-[0.85] tracking-[-0.01em]"
                                         >
                                             {item.title}
                                         </h3>

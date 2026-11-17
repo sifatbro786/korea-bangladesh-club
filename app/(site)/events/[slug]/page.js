@@ -90,7 +90,7 @@ export default async function EventPage({ params }) {
                         </h1>
                     </div>
                     <p className="flex items-end gap-4 md:col-span-4 md:justify-end">
-                        <span className="font-display text-[clamp(4.5rem,9vw,8rem)] font-light leading-[0.8] text-heading">
+                        <span className="font-display text-[clamp(3.5rem,7vw,6.5rem)] font-light leading-[0.8] text-heading">
                             {event.dateLabel.day}
                         </span>
                         <span className="pb-1 text-label uppercase leading-relaxed tracking-label text-muted">
@@ -111,7 +111,7 @@ export default async function EventPage({ params }) {
             <div className="theme-ivory grain relative mt-16 md:mt-24">
             <div className="container-club section-y relative grid gap-14 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-7">
-                    <p className="font-display text-[clamp(2rem,1.5rem+1.6vw,2.75rem)] font-light leading-snug text-heading">{event.summary}</p>
+                    <p className="font-display text-[clamp(1.6rem,1.25rem+1.3vw,2.2rem)] font-light leading-snug text-heading">{event.summary}</p>
                     <div className="mt-10 space-y-6 text-lg">
                         {event.body.map((p) => (
                             <p key={p.slice(0, 24)}>{p}</p>

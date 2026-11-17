@@ -49,7 +49,7 @@ export default async function Footer() {
     return (
         <footer className="relative overflow-hidden border-t border-line">
             <div className="overflow-hidden py-10 md:py-14">
-                <Marquee className="flex w-max font-display text-[clamp(3.5rem,11vw,10rem)] font-light leading-none text-heading">
+                <Marquee className="flex w-max font-display text-[clamp(2.75rem,9vw,8rem)] font-light leading-none text-heading">
                     <MarqueeRun text={site.name} />
                     <MarqueeRun text={site.name} hidden />
                 </Marquee>

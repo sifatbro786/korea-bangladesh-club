@@ -10,7 +10,7 @@ export default function Committee({ data }) {
 
     return (
         <section id="committee" aria-labelledby="committee-title" className="container-club section-y scroll-mt-20">
-            <SectionLabel index="03">{data.label}</SectionLabel>
+            <SectionLabel>{data.label}</SectionLabel>
             <SplitHeading id="committee-title" className="mt-8 max-w-[16ch] text-display-md font-light">
                 {data.title}
             </SplitHeading>

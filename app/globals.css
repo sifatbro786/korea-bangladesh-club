@@ -37,28 +37,30 @@
     --text-base--line-height: 1.7;
     --text-lg: 1.1875rem;
     --text-lg--line-height: 1.65;
-    --text-display-sm: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
-    --text-display-sm--line-height: 1.1;
-    --text-display-md: clamp(2.5rem, 1.8rem + 3vw, 4.5rem);
-    --text-display-md--line-height: 1.02;
-    --text-display-lg: clamp(3.25rem, 2rem + 5.5vw, 7.5rem);
-    --text-display-lg--line-height: 0.95;
+    --text-display-sm: clamp(1.75rem, 1.45rem + 1.2vw, 2.3rem);
+    --text-display-sm--line-height: 1.15;
+    --text-display-md: clamp(2.1rem, 1.55rem + 2.4vw, 3.6rem);
+    --text-display-md--line-height: 1.06;
+    --text-display-lg: clamp(2.6rem, 1.6rem + 4.4vw, 6rem);
+    --text-display-lg--line-height: 1;
 
     --tracking-label: 0.24em;
-    --tracking-display: 0.01em;
+    --tracking-display: -0.01em;
 
     --ease-club: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
-    --font-display: var(--font-cormorant), "Times New Roman", serif;
-    --font-sans: var(--font-jost), system-ui, sans-serif;
+    --font-display: var(--font-hahmlet), Georgia, serif;
+    --font-sans: var(--font-google-sans), system-ui, sans-serif;
 }
 
 @layer base {
     html {
         background-color: var(--color-bg);
         color-scheme: dark;
+        /* Neither font ships an italic in this build: never let the browser fake one. */
+        font-synthesis-style: none;
     }
 
     body {
@@ -672,4 +674,17 @@ html.menu-open {
             transparent 70%
         );
     }
+}
+
+/*
+ * Eyebrow / kicker: sentence case, medium weight, normal tracking. Replaces the
+ * "01 —— TRACKED CAPS" pattern (read as templated). Used by SectionLabel and hero kickers.
+ */
+@utility eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.01em;
+    text-transform: none;
 }

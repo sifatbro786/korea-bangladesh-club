@@ -23,7 +23,7 @@ export default function Membership({ data }) {
                     </div>
 
                     <div className="md:col-span-6 md:col-start-7">
-                        <SectionLabel index="05" tone="light">
+                        <SectionLabel tone="light">
                             {data.label}
                         </SectionLabel>
                         <SplitHeading id="membership-title" className="mt-8 text-display-md font-light">

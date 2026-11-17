@@ -8,7 +8,7 @@ export default function Faq({ data }) {
         <section aria-labelledby="faq-title" className="border-t border-line bg-bg-warm">
             <div className="container-club section-y grid gap-12 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-4">
-                    <SectionLabel index="04">{data.label}</SectionLabel>
+                    <SectionLabel>{data.label}</SectionLabel>
                     <SplitHeading id="faq-title" className="mt-8 text-display-md font-light">
                         {data.title}
                     </SplitHeading>

@@ -26,7 +26,7 @@ export default async function ContactPage() {
 
             <section aria-labelledby="visit-heading" className="container-club section-y grid gap-14 md:grid-cols-12 md:gap-8">
                 <Reveal className="md:col-span-5">
-                    <SectionLabel index="01">The club</SectionLabel>
+                    <SectionLabel>The club</SectionLabel>
                     <h2 id="visit-heading" className="mt-8 text-display-sm font-light">
                         {address.building}
                     </h2>
@@ -82,7 +82,7 @@ export default async function ContactPage() {
             <section aria-labelledby="message-title" className="theme-ivory grain relative">
                 <div className="container-club section-y relative grid gap-14 md:grid-cols-12 md:gap-8">
                     <div className="md:col-span-4">
-                        <SectionLabel index="02">Message</SectionLabel>
+                        <SectionLabel>Message</SectionLabel>
                         <SplitHeading id="message-title" className="mt-8 text-display-md font-light">
                             {page.form.title}
                         </SplitHeading>
