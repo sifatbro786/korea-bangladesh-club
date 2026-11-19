@@ -12,11 +12,8 @@ import { getEvents, getHomePage, getSiteSettings } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 import { localeAlternates } from "@/lib/i18n/server";
 
-const pageMetadata = {
-};
-
 export async function generateMetadata() {
-    return { ...pageMetadata, alternates: await localeAlternates("/") };
+    return { alternates: await localeAlternates("/") };
 }
 
 export default async function HomePage() {

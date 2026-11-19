@@ -3,15 +3,17 @@ import Reveal from "@/components/motion/Reveal";
 import ArrowLink from "@/components/ui/ArrowLink";
 import Ornament from "@/components/ui/Ornament";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { getDictionary } from "@/lib/i18n/server";
 
-export default function Leadership({ data }) {
+export default async function Leadership({ data }) {
+    const dict = await getDictionary();
     return (
         <section aria-labelledby="leadership-title" className="container-club section-y">
             <div className="grid gap-14 md:grid-cols-12 md:gap-8">
                 <div className="md:col-span-4">
                     <SectionLabel>{data.label}</SectionLabel>
                     <h2 id="leadership-title" className="sr-only">
-                        A message from the President
+                        {dict.home.presidentHeading}
                     </h2>
                     <Reveal className="mt-12 w-48 sm:w-56">
                         {/* Source portrait is small (276px): keep it displayed small and framed. */}

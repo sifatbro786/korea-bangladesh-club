@@ -5,6 +5,7 @@ import { getNavigation, getSiteSettings } from "@/lib/content";
 import Marquee from "@/components/motion/Marquee";
 import Arrow from "@/components/ui/Arrow";
 import Ornament from "@/components/ui/Ornament";
+import { getDictionary } from "@/lib/i18n/server";
 
 async function getYear() {
     "use cache";
@@ -43,7 +44,8 @@ function FooterColumn({ title, links }) {
 }
 
 export default async function Footer({ locale } = {}) {
-    const [site, navigation, year] = await Promise.all([getSiteSettings(locale), getNavigation(locale), getYear()]);
+    const [site, navigation, year, dict] = await Promise.all([getSiteSettings(locale), getNavigation(locale), getYear(), getDictionary(locale)]);
+    const t = dict.footer;
     const { address } = site;
 
     return (
@@ -85,19 +87,19 @@ export default async function Footer({ locale } = {}) {
                     </div>
 
                     <div className="grid grid-cols-2 gap-10 md:col-span-6 md:col-start-7 lg:grid-cols-3">
-                        <FooterColumn title="The Club" links={navigation.footer.club} />
-                        <FooterColumn title="Explore" links={navigation.footer.explore} />
+                        <FooterColumn title={t.club} links={navigation.footer.club} />
+                        <FooterColumn title={t.explore} links={navigation.footer.explore} />
                         {site.social.length ? (
-                            <FooterColumn title="Follow" links={site.social.map((s) => ({ label: s.label, href: s.url }))} />
+                            <FooterColumn title={t.follow} links={site.social.map((s) => ({ label: s.label, href: s.url }))} />
                         ) : null}
                     </div>
                 </div>
 
                 <div className="flex flex-col gap-4 border-t border-line py-8 text-label uppercase tracking-label text-muted sm:flex-row sm:items-center sm:justify-between">
                     <p>
-                        &copy; {year} {site.shortName}. All rights reserved.
+                        &copy; {year} {site.shortName}. {t.rights}
                         <span aria-hidden="true" className="mx-3 text-line">/</span>
-                        Developed by{" "}
+                        {t.developedBy}{" "}
                         <a
                             href="https://strsltd.com"
                             target="_blank"
@@ -105,7 +107,7 @@ export default async function Footer({ locale } = {}) {
                             className="text-heading/80 transition-colors hover:text-accent"
                         >
                             STR Solutions LTD
-                            <span className="sr-only"> (opens in a new tab)</span>
+                            <span className="sr-only"> {dict.a11y.newTab}</span>
                         </a>
                     </p>
                     <ul className="flex gap-8">
@@ -118,7 +120,7 @@ export default async function Footer({ locale } = {}) {
                         ))}
                     </ul>
                     <a href="#top" className="group inline-flex items-center gap-2 hover:text-heading">
-                        Back to top
+                        {t.backToTop}
                         <Arrow className="-rotate-90 group-hover:-translate-y-0.5" />
                     </a>
                 </div>

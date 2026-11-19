@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getSiteSettings } from "@/lib/content";
 import LoaderController from "./LoaderController";
+import { getDictionary } from "@/lib/i18n/server";
 
 const WORD = "KBBCC".split("");
 
@@ -10,7 +11,7 @@ const WORD = "KBBCC".split("");
  * Visibility is controlled by html[data-loader] — see loaderScript.js and globals.css.
  */
 export default async function InitialLoader() {
-    const site = await getSiteSettings();
+    const [site, dict] = await Promise.all([getSiteSettings(), getDictionary()]);
     const logo = site.logo?.image;
 
     return (
@@ -43,10 +44,10 @@ export default async function InitialLoader() {
             </div>
 
             <p className="loader-meta loader-meta--left text-label uppercase tracking-label text-muted">
-                Uttar Badda, Dhaka
+                {dict.loader.location}
             </p>
             <p className="loader-meta loader-meta--right text-label uppercase tracking-label text-muted">
-                A private members&rsquo; club
+                {dict.loader.tagline}
             </p>
 
             <LoaderController />

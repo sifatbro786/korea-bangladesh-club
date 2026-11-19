@@ -1,6 +1,6 @@
 # HANDOVER — KBBCC
 
-_Last updated: 2026-11-19 · **Phase 1.5** — step 24a (i18n foundation, EN/KO) done → next: 24b Korean copy for header/footer + homepage_
+_Last updated: 2026-11-19 · **Phase 1.5** — whole site translated to Korean (DRAFT copy) → next: Korean proofreading + Korean web font decision, then Phase 2_
 
 ## Project snapshot
 - Next.js 16.4.6 (App Router, JS), React 19.3, Tailwind v4.3 (via `@tailwindcss/turbopack`), React Compiler on, `cacheComponents` + `partialPrefetching` on.
@@ -64,7 +64,8 @@ _Last updated: 2026-11-19 · **Phase 1.5** — step 24a (i18n foundation, EN/KO)
   - [x] 22 Header wordmark: "KBBCC" text removed, full name as a two-line lockup at all sizes; nav: Membership removed (reached via "Apply for membership" CTA → `/membership`), **Members** added
   - [x] 23 `/members` page: PageHero · Office bearers (President feature + staggered officer portraits) · Executive committee (ivory ledger) · Member directory (grouped by category, no JS) · CtaBand
   - [x] 24a i18n foundation (Option A, no dependency — Sifat 2026-11-19): `app/[locale]` root, `proxy.js`, EN/KO switch in header + mobile menu, `LocaleLink`, localized content layer, hreflang + sitemap alternates, global 404, Korean nav labels + header UI strings
-  - [ ] 24b Korean: header/footer strings + homepage copy · [ ] 24c About + Members · [ ] 24d Membership (+ form labels) · [ ] 24e Events + News (collections) · [ ] 24f Gallery, Contact, Legal, 404, page `meta` titles · [ ] 24g Korean web font decision
+  - [x] 24b–f Whole site in Korean (Sifat: only the nav changed after 24a): every page's copy, events + news collections, UI strings (forms, validation errors, filters, footer, loader, 404, aria labels), page `<title>`/description, image alt text, dates via `Intl`. Checked by a script that walks every `/ko` page's visible text + aria labels: only brand names, addresses and photographer names stay in Latin script.
+  - [ ] 24g Korean web font decision · [ ] Korean proofreading by a native speaker
 - **Phase 2 — Backend + admin dashboard:** MongoDB, auth (JWT/httpOnly), every page's text and images editable, image upload.
 - **Phase 3 — E-commerce:** single-store B2B/B2C, managed by the club, connected to B&F's Kmarket.com.
 
@@ -164,9 +165,20 @@ _Last updated: 2026-11-19 · **Phase 1.5** — step 24a (i18n foundation, EN/KO)
 50. **404s:** unmatched URLs → `app/global-not-found.js` (English chrome; real 404 status + full HTML). `notFound()` inside pages → `app/[locale]/not-found.js`. Both render `components/page/NotFoundView.js`. `Header`/`Footer` accept an optional `locale` prop for this case. A catch-all `[...rest]` route was tried first and rejected: under cacheComponents it served an empty error shell.
 51. Header CTA has `shortLabel` ("Apply" / "가입 신청") shown only between `lg` and `xl`, where the nav + language switch leave no room.
 
+52. **Where translations live** (all DRAFT, `content/ko/*` + `lib/i18n/dictionaries/ko.js`):
+    - Page documents (`home`, `about`, `members`, `membership`, `contact`, `gallery`, `legal`, `navigation`): partial overrides merged over English **by index** for arrays — keep the order identical to the English file.
+    - Collections (`events`, `posts`) and their category/type labels: keyed by **slug / key** (admin may reorder). Post `body` blocks merge by index.
+    - Media alt text: `content/ko/media.js` keyed by media id; `getMedia(id, locale)`.
+    - Interface text (labels, buttons, form fields + errors, filters, aria labels, footer, loader, 404, events/news index heroes, legal/events/news meta): `lib/i18n/dictionaries/{en,ko}.js`. Server components call `getDictionary()`; client islands (`ApplicationForm`, `ContactForm`, `EventsBrowser`, `GalleryBrowser`, `NewsList`, `MomentsTrack`) get a `t` prop from their server parent.
+    - **Dates are never translated by hand**: `lib/content.js` formats `event.dateLabel` (`day`, `month`, `weekday`, `short`, `full`) and `post.dateLabel` from the ISO `date` with `Intl` (`en-GB` / `ko-KR`, UTC). The `dateLabel` fields in `content/events.js` / `news.js` are now unused.
+    - Every content getter resolves the locale ONCE (`locale ??= await getLocale()`) and threads it through `resolveMedia(value, locale)`; route handlers must pass `locale` (sitemap passes `"en"`).
+    - Brand stays English on purpose: header wordmark, KBBCC loader lockup, footer marquee/club name, street address, company names of Bangladeshi members. Korean members' names are in Hangul on `/ko` (dummy data).
+    - Legal Korean text says the English version governs; still needs legal + native review.
+53. **Korean 404:** proxy.js sets request header `x-kbbcc-locale` on `/ko/*`; `app/global-not-found.js` reads it inside `<Suspense>` (English shell, Korean streamed in). `LocaleLink`/`LocaleSwitch` fall back to the URL prefix when there are no route params (global 404). Korean styles use `:lang(ko)` so they also apply to a `lang="ko"` subtree (404 view), not only `<html lang="ko">`.
+
 ## Open items (waiting on client/Sifat)
 - **Real member list for `/members`** — office bearers (with ranks), executive committee, directory by category, portraits, and each member's consent to be listed. Everything there now is dummy.
-- **Korean (KO) copy:** Claude drafts it step by step; a native Korean speaker (club member) must proofread before launch. All Korean files are marked DRAFT.
+- **Korean (KO) copy is fully drafted** (Claude): a native Korean speaker (club member) must proofread `content/ko/*` and `lib/i18n/dictionaries/ko.js` before launch. Legal pages also need the club's legal adviser.
 - **Korean web font (step 24g):** Hahmlet ships Hangul but the full file is large (MBs); options: subset Hahmlet to the Hangul actually used, or Pretendard / Noto Sans KR for body. Until then Korean uses OS fonts.
 - Logo as SVG or high-res transparent PNG.
 - Name and title of the person in `leader-portrait-01.jpg`; committee member list.

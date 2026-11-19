@@ -4,6 +4,7 @@ import ArrowLink from "@/components/ui/ArrowLink";
 import LineArt from "@/components/ui/LineArt";
 import SectionLabel from "@/components/ui/SectionLabel";
 import MomentsTrack from "./MomentsTrack";
+import { getDictionary } from "@/lib/i18n/server";
 
 // Varied widths/heights keep the strip editorial rather than a uniform carousel.
 const SHAPES = [
@@ -15,7 +16,8 @@ const SHAPES = [
     "w-[86vw] aspect-[16/10] lg:w-[36vw]",
 ];
 
-export default function Moments({ data }) {
+export default async function Moments({ data }) {
+    const dict = await getDictionary();
     const header = (
         <div className="container-club relative flex flex-wrap items-end justify-between gap-8">
             <LineArt
@@ -36,7 +38,7 @@ export default function Moments({ data }) {
 
     return (
         <section aria-labelledby="moments-title" className="overflow-hidden border-t border-line">
-            <MomentsTrack header={header}>
+            <MomentsTrack header={header} label={dict.home.momentsTrack}>
                 {data.images.map((image, i) => (
                     <figure key={image.id} className={`relative shrink-0 snap-start ${SHAPES[i % SHAPES.length]}`}>
                         <ClubImage media={image} sizes="(min-width: 1024px) 38vw, 86vw" />

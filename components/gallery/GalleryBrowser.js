@@ -11,7 +11,7 @@ import { setScrollLock } from "@/lib/motion/runtime";
  * Filterable masonry + lightbox (native <dialog>: focus trap, Escape and inert background
  * come from the browser). ← / → and swipe move between photos.
  */
-export default function GalleryBrowser({ items, categories }) {
+export default function GalleryBrowser({ items, categories, t }) {
     const [filter, setFilter] = useState("all");
     const [index, setIndex] = useState(-1);
     const dialogRef = useRef(null);
@@ -52,8 +52,8 @@ export default function GalleryBrowser({ items, categories }) {
 
     return (
         <div className="container-club pb-[clamp(5.5rem,11vw,10rem)]">
-            <div role="group" aria-label="Filter photos" className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5 md:mt-24">
-                {[{ key: "all", label: "All" }, ...used].map((c) => (
+            <div role="group" aria-label={t.filter} className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5 md:mt-24">
+                {[{ key: "all", label: t.all }, ...used].map((c) => (
                     <button
                         key={c.key}
                         type="button"
@@ -82,7 +82,7 @@ export default function GalleryBrowser({ items, categories }) {
                                 onClick={() => open(i)}
                                 className="group relative block w-full overflow-hidden text-left"
                                 style={{ aspectRatio: `${item.image.width} / ${item.image.height}` }}
-                                aria-label={`Open photo: ${item.caption}`}
+                                aria-label={`${t.open} ${item.caption}`}
                             >
                                 <ClubImage
                                     media={item.image}
@@ -101,7 +101,7 @@ export default function GalleryBrowser({ items, categories }) {
 
             <dialog
                 ref={dialogRef}
-                aria-label="Photo viewer"
+                aria-label={t.viewer}
                 onClick={(e) => e.target === dialogRef.current && close()}
                 className="m-0 h-dvh max-h-none w-screen max-w-none bg-bg/95 p-0 text-heading backdrop:bg-bg/80"
             >
@@ -112,7 +112,7 @@ export default function GalleryBrowser({ items, categories }) {
                                 {String(index + 1).padStart(2, "0")} / {String(shown.length).padStart(2, "0")}
                             </span>
                             <button type="button" onClick={close} className="text-heading hover:text-accent" autoFocus>
-                                Close
+                                {t.close}
                             </button>
                         </div>
 
@@ -140,7 +140,7 @@ export default function GalleryBrowser({ items, categories }) {
                             <button
                                 type="button"
                                 onClick={() => step(-1)}
-                                aria-label="Previous photo"
+                                aria-label={t.previous}
                                 className="absolute left-2 top-1/2 hidden -translate-y-1/2 p-4 text-heading hover:text-accent md:block"
                             >
                                 <Arrow className="rotate-180 text-xl" />
@@ -148,7 +148,7 @@ export default function GalleryBrowser({ items, categories }) {
                             <button
                                 type="button"
                                 onClick={() => step(1)}
-                                aria-label="Next photo"
+                                aria-label={t.next}
                                 className="absolute right-2 top-1/2 hidden -translate-y-1/2 p-4 text-heading hover:text-accent md:block"
                             >
                                 <Arrow className="text-xl" />

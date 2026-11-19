@@ -18,21 +18,23 @@ const subscribe = () => () => {};
 const readSearch = () => window.location.search;
 const readServer = () => "";
 
-function validate(fd) {
+function validate(fd, errors) {
     const e = {};
-    if (String(fd.get("fullName") ?? "").trim().length < 2) e.fullName = "Please enter your name.";
-    if (!EMAIL.test(String(fd.get("email") ?? "").trim())) e.email = "Please enter a valid email address.";
+    if (String(fd.get("fullName") ?? "").trim().length < 2) e.fullName = errors.fullName;
+    if (!EMAIL.test(String(fd.get("email") ?? "").trim())) e.email = errors.email;
     const phone = String(fd.get("phone") ?? "").trim();
-    if (phone && !PHONE.test(phone)) e.phone = "Please check the phone number.";
-    if (!fd.get("subject")) e.subject = "Please choose a subject.";
+    if (phone && !PHONE.test(phone)) e.phone = errors.phone;
+    if (!fd.get("subject")) e.subject = errors.subject;
     const msg = String(fd.get("message") ?? "").trim();
-    if (msg.length < 10) e.message = "Please write a little more (at least 10 characters).";
-    if (msg.length > 2000) e.message = "Please keep this under 2,000 characters.";
-    if (!fd.get("consent")) e.consent = "Please confirm so we can reply.";
+    if (msg.length < 10) e.message = errors.messageShort;
+    if (msg.length > 2000) e.message = errors.messageLong;
+    if (!fd.get("consent")) e.consent = errors.consent;
     return e;
 }
 
-export default function ContactForm({ data, subjects, events }) {
+/** `t`: dictionary.forms + `choose`/`sending` from dictionary.common. */
+export default function ContactForm({ data, subjects, events, t }) {
+    const f = t.contact;
     const uid = useId();
     const formRef = useRef(null);
     const [errors, setErrors] = useState({});
@@ -42,7 +44,7 @@ export default function ContactForm({ data, subjects, events }) {
     const param = new URLSearchParams(search).get("subject") ?? "";
     const event = events.find((e) => e.slug === param);
     const presetSubject = event ? "events" : subjects.some((s) => s.value === param) ? param : "";
-    const presetMessage = event ? `I would like to reserve a place at: ${event.title}.\n\nNumber of guests: ` : "";
+    const presetMessage = event ? f.reserveMessage.replace("{event}", event.title) : "";
 
     const id = (name) => `${uid}-${name}`;
     const a11y = (name, hint) => ({
@@ -56,7 +58,7 @@ export default function ContactForm({ data, subjects, events }) {
         e.preventDefault();
         const fd = new FormData(e.currentTarget);
         if (fd.get("website")) return;
-        const found = validate(fd);
+        const found = validate(fd, f.errors);
         setErrors(found);
         const first = Object.keys(found)[0];
         if (first) {
@@ -71,7 +73,7 @@ export default function ContactForm({ data, subjects, events }) {
     if (status === "sent") {
         return (
             <div role="status" className="border-t border-line pt-10">
-                <p className="text-label uppercase tracking-label text-accent">Sent</p>
+                <p className="text-label uppercase tracking-label text-accent">{f.sent}</p>
                 <p className="mt-6 font-display text-display-sm font-light">{data.successTitle}</p>
                 <p className="mt-4">{data.successBody}</p>
             </div>
@@ -82,22 +84,23 @@ export default function ContactForm({ data, subjects, events }) {
         <form ref={formRef} onSubmit={submit} noValidate className="grid gap-10 sm:grid-cols-2" key={presetSubject + presetMessage}>
             <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
                 <label>
-                    Website
+                    {t.honeypot}
                     <input type="text" name="website" tabIndex={-1} autoComplete="off" />
                 </label>
             </div>
 
-            <Field id={id("fullName")} label="Name" required error={errors.fullName}>
+            <Field id={id("fullName")} label={f.name} required error={errors.fullName}>
                 <input {...a11y("fullName")} type="text" autoComplete="name" maxLength={100} className={inputClass} />
             </Field>
-            <Field id={id("email")} label="Email" required error={errors.email}>
+            <Field id={id("email")} label={f.email} required error={errors.email}>
                 <input {...a11y("email")} type="email" autoComplete="email" maxLength={160} className={inputClass} />
             </Field>
-            <Field id={id("phone")} label="Phone" error={errors.phone}>
+            <Field id={id("phone")} label={f.phone} error={errors.phone}>
                 <input {...a11y("phone")} type="tel" autoComplete="tel" maxLength={20} className={inputClass} />
             </Field>
-            <Field id={id("subject")} label="Subject" required error={errors.subject}>
+            <Field id={id("subject")} label={f.subject} required error={errors.subject}>
                 <Select
+                    placeholder={t.choose}
                     id={id("subject")}
                     name="subject"
                     labelId={`${id("subject")}-label`}
@@ -107,7 +110,7 @@ export default function ContactForm({ data, subjects, events }) {
                     options={subjects}
                 />
             </Field>
-            <Field id={id("message")} label="Message" required error={errors.message} className="sm:col-span-2">
+            <Field id={id("message")} label={f.message} required error={errors.message} className="sm:col-span-2">
                 <textarea {...a11y("message")} rows={6} maxLength={2000} defaultValue={presetMessage} className={`${inputClass} resize-y`} />
             </Field>
 
@@ -135,7 +138,7 @@ export default function ContactForm({ data, subjects, events }) {
                     disabled={status === "sending"}
                     className="group inline-flex items-center gap-4 border border-accent px-8 py-4 text-sm uppercase tracking-[0.18em] text-accent transition-colors duration-500 hover:bg-accent hover:text-bg disabled:opacity-60"
                 >
-                    {status === "sending" ? "Sending…" : data.submitLabel}
+                    {status === "sending" ? t.sending : data.submitLabel}
                     <Arrow className="group-hover:translate-x-1" />
                 </button>
             </div>

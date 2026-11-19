@@ -1,8 +1,8 @@
 "use client";
 
 import NextLink from "next/link";
-import { useParams } from "next/navigation";
-import { DEFAULT_LOCALE, hasLocale, localizePath } from "@/lib/i18n/config";
+import { useParams, usePathname } from "next/navigation";
+import { DEFAULT_LOCALE, hasLocale, localeOfPath, localizePath } from "@/lib/i18n/config";
 
 /**
  * Drop-in for next/link: internal hrefs ("/about") get the current locale prefix ("/ko/about").
@@ -11,6 +11,8 @@ import { DEFAULT_LOCALE, hasLocale, localizePath } from "@/lib/i18n/config";
  */
 export default function LocaleLink({ href, locale, ...props }) {
     const params = useParams();
-    const current = hasLocale(params?.locale) ? params.locale : DEFAULT_LOCALE;
+    const pathname = usePathname();
+    // No route params on the global 404 → fall back to the URL prefix.
+    const current = hasLocale(params?.locale) ? params.locale : (localeOfPath(pathname ?? "") ?? DEFAULT_LOCALE);
     return <NextLink href={localizePath(href, locale ?? current)} {...props} />;
 }

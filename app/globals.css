@@ -66,7 +66,8 @@
     }
 
     /* Korean: break between words (eojeol), never inside one; tighter display tracking reads odd in Hangul. */
-    html:lang(ko) {
+    html:lang(ko),
+    [lang="ko"] {
         word-break: keep-all;
         overflow-wrap: anywhere;
     }
@@ -715,6 +716,6 @@ html.menu-open {
 /* ───────────────────────── Korean ───────────────────────── */
 /* Wide tracking (labels, nav, CTAs) is a Latin small-caps device; on Hangul it splits syllables
    apart ("회 원 가 입"). Unlayered on purpose so it wins over the tracking utilities. */
-html:lang(ko) [class*="tracking-"] {
+[class*="tracking-"]:lang(ko) {
     letter-spacing: 0.02em;
 }

@@ -7,7 +7,8 @@ import Ornament from "@/components/ui/Ornament";
 import JsonLd from "@/components/seo/JsonLd";
 import { getPost, getPostSlugs, getPosts, getSiteSettings } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
-import { localeAlternates } from "@/lib/i18n/server";
+import { getDictionary, getLocale, localeAlternates } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/config";
 
 export async function generateStaticParams() {
     const slugs = await getPostSlugs();
@@ -66,15 +67,17 @@ export default async function PostPage({ params }) {
     const post = await getPost(slug);
     if (!post) notFound();
 
-    const site = await getSiteSettings();
+    const [site, dict, locale] = await Promise.all([getSiteSettings(), getDictionary(), getLocale()]);
+    const t = dict.news;
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
         headline: post.title,
+        inLanguage: locale,
         description: post.excerpt,
         datePublished: post.date,
         ...(post.image ? { image: [absoluteUrl(post.image.src)] } : {}),
-        mainEntityOfPage: absoluteUrl(`/news/${post.slug}`),
+        mainEntityOfPage: absoluteUrl(localizePath(`/news/${post.slug}`, locale)),
         publisher: {
             "@type": "Organization",
             name: site.name,
@@ -93,7 +96,7 @@ export default async function PostPage({ params }) {
             <header className="container-club pt-36 md:pt-44">
                 <Link href="/news" className="group inline-flex items-center gap-3 text-label uppercase tracking-label text-muted hover:text-heading">
                     <Arrow className="rotate-180 group-hover:-translate-x-1" />
-                    News & notices
+                    {t.backToList}
                 </Link>
                 <div className="mt-12 max-w-5xl">
                     <p className="text-label uppercase tracking-label text-accent">
@@ -130,11 +133,11 @@ export default async function PostPage({ params }) {
                 </div>
             </div>
 
-            <nav aria-label="More posts" className="border-t border-line bg-surface">
+            <nav aria-label={t.moreNav} className="border-t border-line bg-surface">
                 <div className="container-club grid md:grid-cols-2">
                     {[
-                        { post: older, label: "Older", dir: "prev" },
-                        { post: newer, label: "Newer", dir: "next" },
+                        { post: older, label: t.older, dir: "prev" },
+                        { post: newer, label: t.newer, dir: "next" },
                     ].map(({ post: p, label, dir }) =>
                         p ? (
                             <Link

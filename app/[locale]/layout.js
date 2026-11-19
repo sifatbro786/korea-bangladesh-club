@@ -4,7 +4,7 @@ import SmoothScroll from "@/components/motion/SmoothScroll";
 import InlineScript from "@/components/ui/InlineScript";
 import { notFound } from "next/navigation";
 import { LOCALES, LOCALE_META } from "@/lib/i18n/config";
-import { getLocale } from "@/lib/i18n/server";
+import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { fontVariables } from "../font-config";
 import "../globals.css";
 
@@ -34,9 +34,11 @@ const baseMetadata = {
 };
 
 export async function generateMetadata() {
-    const locale = await getLocale();
+    const [locale, dict] = await Promise.all([getLocale(), getDictionary()]);
     return {
         ...baseMetadata,
+        title: { ...baseMetadata.title, default: dict.site.title },
+        description: dict.site.description,
         openGraph: {
             ...baseMetadata.openGraph,
             locale: LOCALE_META[locale].ogLocale,

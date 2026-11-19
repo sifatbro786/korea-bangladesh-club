@@ -5,9 +5,11 @@ import SplitHeading from "@/components/motion/SplitHeading";
 import Arrow from "@/components/ui/Arrow";
 import ArrowLink from "@/components/ui/ArrowLink";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { getDictionary } from "@/lib/i18n/server";
 
 /** Homepage "What's on": next upcoming event + the latest past ones (from content/events.js). */
-export default function Events({ data, upcoming, past }) {
+export default async function Events({ data, upcoming, past }) {
+    const dict = await getDictionary();
     const featured = upcoming[0];
     const recent = past.slice(0, data.recentCount);
 
@@ -33,7 +35,7 @@ export default function Events({ data, upcoming, past }) {
                         </Reveal>
 
                         <Reveal delay={150} className="flex flex-col md:col-span-4 md:col-start-9">
-                            <p className="eyebrow text-accent">Next on the calendar</p>
+                            <p className="eyebrow text-accent">{dict.home.nextOnCalendar}</p>
                             <p className="mt-8 flex items-end gap-5 border-b border-line pb-6">
                                 <span className="font-display text-[clamp(3.5rem,6.5vw,5.75rem)] font-light leading-[0.8] text-heading">
                                     {featured.dateLabel.day}

@@ -6,21 +6,22 @@ import PageHero from "@/components/page/PageHero";
 import ArrowLink from "@/components/ui/ArrowLink";
 import Ornament from "@/components/ui/Ornament";
 import SectionLabel from "@/components/ui/SectionLabel";
-import { contact } from "@/content/contact";
 import { getContactPage, getEvents, getSiteSettings } from "@/lib/content";
 import { localeAlternates } from "@/lib/i18n/server";
-
-const pageMetadata = {
-    title: contact.meta.title,
-    description: contact.meta.description,
-};
+import { getDictionary } from "@/lib/i18n/server";
 
 export async function generateMetadata() {
-    return { ...pageMetadata, alternates: await localeAlternates("/contact") };
+    const { meta } = await getContactPage();
+    return { title: meta.title, description: meta.description, alternates: await localeAlternates("/contact") };
 }
 
 export default async function ContactPage() {
-    const [page, site, upcoming] = await Promise.all([getContactPage(), getSiteSettings(), getEvents({ status: "upcoming" })]);
+    const [page, site, upcoming, dict] = await Promise.all([
+        getContactPage(),
+        getSiteSettings(),
+        getEvents({ status: "upcoming" }),
+        getDictionary(),
+    ]);
     const { address } = site;
     const events = upcoming.map(({ slug, title }) => ({ slug, title }));
 
@@ -30,7 +31,7 @@ export default async function ContactPage() {
 
             <section aria-labelledby="visit-heading" className="container-club section-y grid gap-14 md:grid-cols-12 md:gap-8">
                 <Reveal className="md:col-span-5">
-                    <SectionLabel>The club</SectionLabel>
+                    <SectionLabel>{dict.contact.theClub}</SectionLabel>
                     <h2 id="visit-heading" className="mt-8 text-display-sm font-light">
                         {address.building}
                     </h2>
@@ -45,7 +46,7 @@ export default async function ContactPage() {
                     <dl className="mt-10 grid gap-6">
                         {site.contact.email ? (
                             <div className="border-t border-line pt-4">
-                                <dt className="text-label uppercase tracking-label text-muted">Email</dt>
+                                <dt className="text-label uppercase tracking-label text-muted">{dict.common.email}</dt>
                                 <dd className="mt-2">
                                     <a href={`mailto:${site.contact.email}`} className="text-heading hover:text-accent">
                                         {site.contact.email}
@@ -55,7 +56,7 @@ export default async function ContactPage() {
                         ) : null}
                         {site.contact.phone ? (
                             <div className="border-t border-line pt-4">
-                                <dt className="text-label uppercase tracking-label text-muted">Phone</dt>
+                                <dt className="text-label uppercase tracking-label text-muted">{dict.common.phone}</dt>
                                 <dd className="mt-2">
                                     <a href={`tel:${site.contact.phone.replace(/\s/g, "")}`} className="text-heading hover:text-accent">
                                         {site.contact.phone}
@@ -67,7 +68,7 @@ export default async function ContactPage() {
 
                     <div className="mt-10">
                         <ArrowLink href={site.mapUrl} external>
-                            Open in Google Maps
+                            {dict.common.openInMaps}
                         </ArrowLink>
                     </div>
                     <Ornament align="start" className="mt-12 max-w-48" />
@@ -78,7 +79,7 @@ export default async function ContactPage() {
                         query={page.map.embedQuery}
                         loadLabel={page.map.loadLabel}
                         note={page.map.note}
-                        title={`Map: ${address.building}, ${address.area}`}
+                        title={`${dict.contact.mapTitle} ${address.building}, ${address.area}`}
                     />
                 </Reveal>
             </section>
@@ -86,13 +87,18 @@ export default async function ContactPage() {
             <section aria-labelledby="message-title" className="theme-ivory grain relative">
                 <div className="container-club section-y relative grid gap-14 md:grid-cols-12 md:gap-8">
                     <div className="md:col-span-4">
-                        <SectionLabel>Message</SectionLabel>
+                        <SectionLabel>{dict.contact.message}</SectionLabel>
                         <SplitHeading id="message-title" className="mt-8 text-display-md font-light">
                             {page.form.title}
                         </SplitHeading>
                     </div>
                     <div className="md:col-span-7 md:col-start-6">
-                        <ContactForm data={page.form} subjects={page.subjects} events={events} />
+                        <ContactForm
+                            data={page.form}
+                            subjects={page.subjects}
+                            events={events}
+                            t={{ ...dict.forms, choose: dict.common.choose, sending: dict.common.sending }}
+                        />
                     </div>
                 </div>
             </section>

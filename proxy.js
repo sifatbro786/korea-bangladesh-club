@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { DEFAULT_LOCALE, LOCALE_COOKIE, hasLocale } from "@/lib/i18n/config";
+import { DEFAULT_LOCALE, LOCALE_COOKIE, LOCALE_HEADER, hasLocale } from "@/lib/i18n/config";
 
 /**
  * Locale routing (no library).
@@ -20,7 +20,12 @@ export function proxy(request) {
         return NextResponse.redirect(url, 308);
     }
 
-    if (hasLocale(first)) return NextResponse.next();
+    if (hasLocale(first)) {
+        // Tells app/global-not-found.js which language an unmatched /ko/... URL was in.
+        const headers = new Headers(request.headers);
+        headers.set(LOCALE_HEADER, first);
+        return NextResponse.next({ request: { headers } });
+    }
 
     const preferred = request.cookies.get(LOCALE_COOKIE)?.value;
     if (hasLocale(preferred) && preferred !== DEFAULT_LOCALE) {

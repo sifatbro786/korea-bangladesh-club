@@ -6,14 +6,14 @@ import ClubImage from "@/components/media/ClubImage";
 import Arrow from "@/components/ui/Arrow";
 
 /** Filterable list of news + notices. Notices render as compact rows (no image). */
-export default function NewsList({ posts, types }) {
+export default function NewsList({ posts, types, t: copy }) {
     const [filter, setFilter] = useState("all");
     const shown = filter === "all" ? posts : posts.filter((p) => p.type === filter);
 
     return (
         <>
-            <div role="group" aria-label="Filter posts" className="flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5">
-                {[{ key: "all", label: "All" }, ...types].map((t) => (
+            <div role="group" aria-label={copy.filter} className="flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5">
+                {[{ key: "all", label: copy.all }, ...types].map((t) => (
                     <button
                         key={t.key}
                         type="button"

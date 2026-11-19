@@ -1,6 +1,7 @@
 import ClubImage from "@/components/media/ClubImage";
 import ArrowLink from "@/components/ui/ArrowLink";
 import HeroIntro from "./HeroIntro";
+import { getDictionary } from "@/lib/i18n/server";
 
 /**
  * Diptych hero: Seoul | Dhaka with no divider. Desktop: both panes are 70% wide and overlap; the Dhaka pane
@@ -8,7 +9,8 @@ import HeroIntro from "./HeroIntro";
  * names sit large on their own sides, fixed (desktop); on mobile a corner caption labels Seoul.
  * The h1 is the LCP element — it is never hidden or masked; only decoration animates.
  */
-export default function Hero({ data }) {
+export default async function Hero({ data }) {
+    const dict = await getDictionary();
     const [seoul, dhaka] = data.panes;
 
     return (
@@ -77,7 +79,7 @@ export default function Hero({ data }) {
                     <div className="hero-fade flex items-center justify-between gap-8 md:col-span-6 md:col-start-7 lg:col-span-5 lg:col-start-8" style={{ "--d": "0.5s" }}>
                         <ArrowLink href={data.cta.href}>{data.cta.label}</ArrowLink>
                         <span aria-hidden="true" className="flex items-center gap-3 text-label uppercase tracking-label text-muted">
-                            Scroll
+                            {dict.common.scroll}
                             <span className="h-10 w-px bg-line" />
                         </span>
                     </div>

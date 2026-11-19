@@ -7,7 +7,7 @@ import { useGsap } from "@/components/motion/useGsap";
  * Desktop + motion: the section pins and the track scrolls horizontally with the page.
  * Mobile / reduced motion: a native, swipeable scroll-snap row (no GSAP work at all).
  */
-export default function MomentsTrack({ children, header }) {
+export default function MomentsTrack({ children, header, label }) {
     const scope = useRef(null);
 
     useGsap(
@@ -41,7 +41,7 @@ export default function MomentsTrack({ children, header }) {
             <div
                 data-track
                 role="region"
-                aria-label="Moments — scroll sideways to see more photographs"
+                aria-label={label}
                 tabIndex={0}
                 className="mt-14 flex snap-x snap-mandatory gap-6 overflow-x-auto px-[clamp(1.25rem,4vw,3.5rem)] pb-4 [scrollbar-width:none] md:gap-10 [&::-webkit-scrollbar]:hidden"
             >

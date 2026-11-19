@@ -13,7 +13,7 @@ import SectionLabel from "@/components/ui/SectionLabel";
  * never with reduced motion). All preview images are mounted once and cross-faded, so
  * hovering never waits for a download.
  */
-export default function EventsBrowser({ categories, upcoming, past }) {
+export default function EventsBrowser({ categories, upcoming, past, t }) {
     const [filter, setFilter] = useState("all");
     const [active, setActive] = useState(null);
     const previewRef = useRef(null);
@@ -57,8 +57,8 @@ export default function EventsBrowser({ categories, upcoming, past }) {
         <>
         <div className="container-club pb-[clamp(5.5rem,11vw,10rem)]">
             {/* Filters */}
-            <div role="group" aria-label="Filter events" className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5 md:mt-24">
-                {[{ key: "all", label: "All" }, ...categories].map((c) => (
+            <div role="group" aria-label={t.filter} className="mt-16 flex flex-wrap gap-x-8 gap-y-3 border-b border-line pb-5 md:mt-24">
+                {[{ key: "all", label: t.all }, ...categories].map((c) => (
                     <button
                         key={c.key}
                         type="button"
@@ -80,7 +80,7 @@ export default function EventsBrowser({ categories, upcoming, past }) {
             {/* Upcoming */}
             <section aria-labelledby="upcoming-title" className="mt-16">
                 <SectionLabel as="h2">
-                    <span id="upcoming-title">Upcoming</span>
+                    <span id="upcoming-title">{t.upcoming}</span>
                 </SectionLabel>
 
                 {upcomingShown.length ? (
@@ -122,7 +122,7 @@ export default function EventsBrowser({ categories, upcoming, past }) {
                         ))}
                     </ul>
                 ) : (
-                    <p className="mt-8 border-t border-line pt-8 text-muted">Nothing scheduled in this category yet.</p>
+                    <p className="mt-8 border-t border-line pt-8 text-muted">{t.noneUpcoming}</p>
                 )}
             </section>
 
@@ -133,7 +133,7 @@ export default function EventsBrowser({ categories, upcoming, past }) {
             {/* Past */}
             <section aria-labelledby="past-title">
                 <SectionLabel as="h2">
-                    <span id="past-title">Recently at the club</span>
+                    <span id="past-title">{t.past}</span>
                 </SectionLabel>
 
                 {pastShown.length ? (
@@ -151,7 +151,7 @@ export default function EventsBrowser({ categories, upcoming, past }) {
                                         </div>
                                     </Reveal>
                                     <p className="mt-6 text-label uppercase tracking-label text-accent">
-                                        {e.dateLabel.day} {e.dateLabel.month} · {e.categoryLabel}
+                                        {e.dateLabel.short} · {e.categoryLabel}
                                     </p>
                                     <h3 className="mt-3 max-w-[26ch] text-display-sm font-light transition-colors group-hover:text-accent">{e.title}</h3>
                                 </Link>
@@ -159,7 +159,7 @@ export default function EventsBrowser({ categories, upcoming, past }) {
                         ))}
                     </ul>
                 ) : (
-                    <p className="mt-8 border-t border-line pt-8 text-muted">No past events in this category.</p>
+                    <p className="mt-8 border-t border-line pt-8 text-muted">{t.nonePast}</p>
                 )}
             </section>
 

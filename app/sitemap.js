@@ -5,7 +5,7 @@ import { absoluteUrl } from "@/lib/seo";
 /** @returns {Promise<import("next").MetadataRoute.Sitemap>} */
 export default async function sitemap() {
     // Route handler: no root params here — content getters that localize must get a locale explicitly.
-    const [events, posts] = await Promise.all([getEvents(), getPosts()]);
+    const [events, posts] = await Promise.all([getEvents({ locale: DEFAULT_LOCALE }), getPosts({ locale: DEFAULT_LOCALE })]);
 
     const pages = [
         { path: "/", priority: 1, changeFrequency: "weekly" },

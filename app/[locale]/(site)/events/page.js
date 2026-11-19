@@ -1,19 +1,16 @@
 import EventsBrowser from "@/components/events/EventsBrowser";
 import PageHero from "@/components/page/PageHero";
 import { getEventCategories, getEvents } from "@/lib/content";
-import { localeAlternates } from "@/lib/i18n/server";
-
-const pageMetadata = {
-    title: "Events",
-    description: "Business exchange sessions, cultural evenings and members' dinners at the Korea Bangladesh Business & Cultural Club.",
-};
+import { getDictionary, localeAlternates } from "@/lib/i18n/server";
 
 export async function generateMetadata() {
-    return { ...pageMetadata, alternates: await localeAlternates("/events") };
+    const { meta } = (await getDictionary()).events;
+    return { title: meta.title, description: meta.description, alternates: await localeAlternates("/events") };
 }
 
 export default async function EventsPage() {
-    const [categories, upcoming, past] = await Promise.all([
+    const [dict, categories, upcoming, past] = await Promise.all([
+        getDictionary(),
         getEventCategories(),
         getEvents({ status: "upcoming" }),
         getEvents({ status: "past" }),
@@ -21,12 +18,8 @@ export default async function EventsPage() {
 
     return (
         <>
-            <PageHero
-                label="Events"
-                title={["What’s on", "at the club."]}
-                intro="Business exchange sessions, the festivals of both countries and members’ dinners. Members are welcome to bring one guest unless noted."
-            />
-            <EventsBrowser categories={categories} upcoming={upcoming} past={past} />
+            <PageHero label={dict.events.hero.label} title={dict.events.hero.title} intro={dict.events.hero.intro} />
+            <EventsBrowser categories={categories} upcoming={upcoming} past={past} t={{ ...dict.events, all: dict.common.all }} />
         </>
     );
 }

@@ -2,9 +2,11 @@ import Reveal from "@/components/motion/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 import ArrowLink from "@/components/ui/ArrowLink";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { getDictionary } from "@/lib/i18n/server";
 
 /** Membership categories as editorial rows (deliberately not a 3-up card grid). */
-export default function Tiers({ data }) {
+export default async function Tiers({ data }) {
+    const dict = await getDictionary();
     return (
         <section aria-labelledby="tiers-title" className="border-t border-line bg-surface">
             <div className="container-club section-y">
@@ -39,10 +41,10 @@ export default function Tiers({ data }) {
                             </ul>
                             <div className="flex flex-col justify-between gap-6 md:col-span-2 md:flex-row md:items-end lg:col-span-2 lg:flex-col lg:items-end lg:text-right">
                                 <p>
-                                    <span className="block text-label uppercase tracking-label text-muted">Annual fee</span>
+                                    <span className="block text-label uppercase tracking-label text-muted">{dict.membership.annualFee}</span>
                                     <span className="mt-1 block text-heading">{t.fee}</span>
                                 </p>
-                                <ArrowLink href="#apply">Apply</ArrowLink>
+                                <ArrowLink href="#apply">{dict.common.apply}</ArrowLink>
                             </div>
                         </Reveal>
                     ))}

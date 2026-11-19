@@ -11,7 +11,8 @@ import SectionLabel from "@/components/ui/SectionLabel";
 import JsonLd from "@/components/seo/JsonLd";
 import { getEvent, getEventSlugs, getEvents, getSiteSettings } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
-import { localeAlternates } from "@/lib/i18n/server";
+import { getDictionary, getLocale, localeAlternates } from "@/lib/i18n/server";
+import { localizePath } from "@/lib/i18n/config";
 
 export async function generateStaticParams() {
     const slugs = await getEventSlugs();
@@ -47,17 +48,19 @@ export default async function EventPage({ params }) {
     const all = await getEvents();
     const more = all.filter((e) => e.slug !== slug && e.status === event.status).slice(0, 2);
     const isUpcoming = event.status === "upcoming";
-    const site = await getSiteSettings();
+    const [site, dict, locale] = await Promise.all([getSiteSettings(), getDictionary(), getLocale()]);
+    const t = dict.events;
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "Event",
         name: event.title,
+        inLanguage: locale,
         description: event.summary,
         startDate: event.date,
         eventStatus: "https://schema.org/EventScheduled",
         eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
         image: [absoluteUrl(event.image.src)],
-        url: absoluteUrl(`/events/${event.slug}`),
+        url: absoluteUrl(localizePath(`/events/${event.slug}`, locale)),
         location: {
             "@type": "Place",
             name: event.venue,
@@ -78,13 +81,13 @@ export default async function EventPage({ params }) {
             <header className="container-club pt-36 md:pt-44">
                 <Link href="/events" className="group inline-flex items-center gap-3 text-label uppercase tracking-label text-muted hover:text-heading">
                     <Arrow className="rotate-180 group-hover:-translate-x-1" />
-                    All events
+                    {t.allEvents}
                 </Link>
 
                 <div className="mt-12 grid gap-10 md:grid-cols-12 md:items-end">
                     <div className="md:col-span-8">
                         <p className="text-label uppercase tracking-label text-accent">
-                            {event.categoryLabel} · {isUpcoming ? "Upcoming" : "Past event"}
+                            {event.categoryLabel} · {isUpcoming ? t.upcoming : t.pastEvent}
                         </p>
                         <h1 id="event-title" className="mt-6 text-display-lg font-light">
                             {event.title}
@@ -120,21 +123,21 @@ export default async function EventPage({ params }) {
                     </div>
                 </div>
 
-                <aside aria-label="Event details" className="md:col-span-4 md:col-start-9">
+                <aside aria-label={t.details} className="md:col-span-4 md:col-start-9">
                     <div className="md:sticky md:top-28">
                         <dl className="grid gap-6">
-                            <Meta label="Date">
-                                {event.dateLabel.weekday}, {event.dateLabel.day} {event.dateLabel.month}
+                            <Meta label={t.date}>
+                                <time dateTime={event.date}>{event.dateLabel.full}</time>
                             </Meta>
-                            <Meta label="Time">{event.time}</Meta>
-                            <Meta label="Venue">{event.venue}</Meta>
-                            <Meta label="Category">{event.categoryLabel}</Meta>
+                            <Meta label={t.time}>{event.time}</Meta>
+                            <Meta label={t.venue}>{event.venue}</Meta>
+                            <Meta label={t.category}>{event.categoryLabel}</Meta>
                         </dl>
                         <div className="mt-10">
                             {isUpcoming && event.rsvp ? (
                                 <ArrowLink href={event.rsvp.href}>{event.rsvp.label}</ArrowLink>
                             ) : (
-                                <p className="text-sm text-muted">This event has taken place.</p>
+                                <p className="text-sm text-muted">{t.tookPlace}</p>
                             )}
                         </div>
                         <Ornament align="start" className="mt-10" />
@@ -146,9 +149,9 @@ export default async function EventPage({ params }) {
             {event.images?.length ? (
                 <section aria-labelledby="gallery-title" className="border-t border-line">
                     <div className="container-club section-y">
-                        <SectionLabel>From the evening</SectionLabel>
+                        <SectionLabel>{t.fromTheEvening}</SectionLabel>
                         <SplitHeading id="gallery-title" className="mt-8 text-display-md font-light">
-                            In pictures.
+                            {t.inPictures}
                         </SplitHeading>
                         <ul className="mt-14 grid gap-8 md:grid-cols-12">
                             {event.images.map((img, i) => (
@@ -173,9 +176,9 @@ export default async function EventPage({ params }) {
                     <div className="container-club section-y">
                         <div className="flex flex-wrap items-end justify-between gap-6">
                             <SplitHeading id="more-title" className="text-display-md font-light">
-                                {isUpcoming ? "Also coming up." : "More from the club."}
+                                {isUpcoming ? t.alsoComingUp : t.moreFromClub}
                             </SplitHeading>
-                            <ArrowLink href="/events">All events</ArrowLink>
+                            <ArrowLink href="/events">{t.allEvents}</ArrowLink>
                         </div>
                         <ul className="mt-14 border-t border-line">
                             {more.map((e) => (
@@ -185,7 +188,7 @@ export default async function EventPage({ params }) {
                                         className="group grid items-baseline gap-4 py-8 md:grid-cols-12 md:gap-8"
                                     >
                                         <span className="text-label uppercase tracking-label text-muted md:col-span-3">
-                                            {e.dateLabel.day} {e.dateLabel.month}
+                                            {e.dateLabel.short}
                                         </span>
                                         <span className="font-display text-display-sm font-light transition-colors group-hover:text-accent md:col-span-8">
                                             {e.title}

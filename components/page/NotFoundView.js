@@ -3,14 +3,16 @@ import Header from "@/components/layout/Header";
 import ArrowLink from "@/components/ui/ArrowLink";
 import LineArt from "@/components/ui/LineArt";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { getDictionary } from "@/lib/i18n/server";
 
 /**
  * 404 page body with the site chrome. Used by app/[locale]/not-found.js (notFound() inside a page)
  * and app/global-not-found.js (URLs that match no route). `locale` is passed only by the latter.
  */
-export default function NotFoundView({ locale }) {
+export default async function NotFoundView({ locale }) {
+    const t = (await getDictionary(locale)).notFound;
     return (
-        <div id="top" className="flex min-h-dvh flex-1 flex-col">
+        <div id="top" lang={locale} className="flex min-h-dvh flex-1 flex-col">
             <Header locale={locale} />
             <main id="main" className="relative flex flex-1 items-center overflow-hidden pb-24 pt-36">
                 <div
@@ -23,7 +25,7 @@ export default function NotFoundView({ locale }) {
                     className="absolute right-[-6rem] top-1/2 size-[28rem] -translate-y-1/2 text-accent opacity-[0.12] md:right-[6%] md:size-[34rem]"
                 />
                 <div className="container-club relative">
-                    <SectionLabel>Error 404</SectionLabel>
+                    <SectionLabel>{t.label}</SectionLabel>
                     {/* Decorative numeral drawn via ::before so it is not treated as text content. */}
                     <span
                         aria-hidden="true"
@@ -31,16 +33,15 @@ export default function NotFoundView({ locale }) {
                         className="mt-8 block font-display text-[clamp(5.5rem,2.5rem+14vw,14rem)] font-light leading-[0.8] text-heading/10 before:content-[attr(data-text)]"
                     />
                     <h1 className="-mt-6 max-w-[14ch] text-display-md font-light md:-mt-12">
-                        This room is not on the <span className="text-accent">floor plan.</span>
+                        {t.title[0]} <span className="text-accent">{t.title[1]}</span>
                     </h1>
-                    <p className="mt-8 max-w-[44ch]">
-                        The page you were looking for has moved, or never existed. These are the rooms people usually look for.
-                    </p>
+                    <p className="mt-8 max-w-[44ch]">{t.body}</p>
                     <div className="mt-12 flex flex-wrap gap-x-10 gap-y-5">
-                        <ArrowLink href="/">Home</ArrowLink>
-                        <ArrowLink href="/events">What’s on</ArrowLink>
-                        <ArrowLink href="/membership">Membership</ArrowLink>
-                        <ArrowLink href="/contact">Contact</ArrowLink>
+                        {t.links.map((l) => (
+                            <ArrowLink key={l.href} href={l.href}>
+                                {l.label}
+                            </ArrowLink>
+                        ))}
                     </div>
                 </div>
             </main>

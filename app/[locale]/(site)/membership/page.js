@@ -7,21 +7,17 @@ import SplitHeading from "@/components/motion/SplitHeading";
 import PageHero from "@/components/page/PageHero";
 import Ornament from "@/components/ui/Ornament";
 import SectionLabel from "@/components/ui/SectionLabel";
-import { membership } from "@/content/membership";
 import { getMembershipPage } from "@/lib/content";
 import { localeAlternates } from "@/lib/i18n/server";
-
-const pageMetadata = {
-    title: membership.meta.title,
-    description: membership.meta.description,
-};
+import { getDictionary } from "@/lib/i18n/server";
 
 export async function generateMetadata() {
-    return { ...pageMetadata, alternates: await localeAlternates("/membership") };
+    const { meta } = await getMembershipPage();
+    return { title: meta.title, description: meta.description, alternates: await localeAlternates("/membership") };
 }
 
 export default async function MembershipPage() {
-    const page = await getMembershipPage();
+    const [page, dict] = await Promise.all([getMembershipPage(), getDictionary()]);
     const categories = page.tiers.items.map(({ key, name }) => ({ key, name }));
 
     return (
@@ -43,7 +39,7 @@ export default async function MembershipPage() {
                         <Ornament align="start" className="mt-10 max-w-48" />
                     </div>
                     <div className="lg:col-span-7 lg:col-start-6">
-                        <ApplicationForm data={page.form} categories={categories} />
+                        <ApplicationForm data={page.form} categories={categories} t={{ ...dict.forms, choose: dict.common.choose, sending: dict.common.sending }} />
                     </div>
                 </div>
             </section>

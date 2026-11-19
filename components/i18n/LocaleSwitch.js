@@ -8,6 +8,7 @@ import {
     LOCALE_COOKIE_MAX_AGE,
     LOCALE_META,
     hasLocale,
+    localeOfPath,
     localizePath,
     stripLocale,
 } from "@/lib/i18n/config";
@@ -26,7 +27,7 @@ function remember(locale) {
 export default function LocaleSwitch({ label, variant = "bar", className = "" }) {
     const params = useParams();
     const pathname = usePathname() ?? "/";
-    const current = hasLocale(params?.locale) ? params.locale : DEFAULT_LOCALE;
+    const current = hasLocale(params?.locale) ? params.locale : (localeOfPath(pathname) ?? DEFAULT_LOCALE);
     const bare = stripLocale(pathname);
 
     return (

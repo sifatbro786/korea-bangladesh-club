@@ -3,9 +3,11 @@ import Reveal from "@/components/motion/Reveal";
 import SplitHeading from "@/components/motion/SplitHeading";
 import Ornament from "@/components/ui/Ornament";
 import SectionLabel from "@/components/ui/SectionLabel";
+import { getDictionary } from "@/lib/i18n/server";
 
 /** Committee list. Names stay null until the club confirms them — never invented. */
-export default function Committee({ data }) {
+export default async function Committee({ data }) {
+    const tbc = (await getDictionary()).common.toBeConfirmed;
     const [lead, ...rest] = data.members;
 
     return (
@@ -24,7 +26,7 @@ export default function Committee({ data }) {
                     ) : null}
                     <p className="mt-6 text-label uppercase tracking-label text-accent">{lead.role}</p>
                     <p className="mt-2 font-display text-display-sm font-light">
-                        {lead.name ?? <span className="italic text-muted">To be confirmed</span>}
+                        {lead.name ?? <span className="text-muted">{tbc}</span>}
                     </p>
                 </Reveal>
 
@@ -33,7 +35,7 @@ export default function Committee({ data }) {
                         <Reveal as="li" key={m.role} delay={i * 60} className="flex flex-wrap items-baseline justify-between gap-4 border-b border-line py-6">
                             <span className="text-label uppercase tracking-label text-heading/80">{m.role}</span>
                             <span className="font-display text-[2rem] font-light leading-none">
-                                {m.name ?? <span className="italic text-muted">To be confirmed</span>}
+                                {m.name ?? <span className="text-muted">{tbc}</span>}
                             </span>
                         </Reveal>
                     ))}

@@ -3,37 +3,34 @@ import SplitHeading from "@/components/motion/SplitHeading";
 import PageHero from "@/components/page/PageHero";
 import Arrow from "@/components/ui/Arrow";
 import SectionLabel from "@/components/ui/SectionLabel";
-import { gallery } from "@/content/gallery";
 import { getEventCategories, getGallery, getPhotoCredits } from "@/lib/content";
 import { localeAlternates } from "@/lib/i18n/server";
-
-const pageMetadata = {
-    title: gallery.meta.title,
-    description: gallery.meta.description,
-};
+import { getDictionary } from "@/lib/i18n/server";
 
 export async function generateMetadata() {
-    return { ...pageMetadata, alternates: await localeAlternates("/gallery") };
+    const { meta } = await getGallery();
+    return { title: meta.title, description: meta.description, alternates: await localeAlternates("/gallery") };
 }
 
 export default async function GalleryPage() {
-    const [page, categories, credits] = await Promise.all([getGallery(), getEventCategories(), getPhotoCredits()]);
+    const [page, categories, credits, dict] = await Promise.all([getGallery(), getEventCategories(), getPhotoCredits(), getDictionary()]);
+    const t = dict.gallery;
 
     return (
         <>
             <PageHero label={page.hero.label} title={page.hero.title} intro={page.hero.intro} />
-            <GalleryBrowser items={page.items} categories={categories} />
+            <GalleryBrowser items={page.items} categories={categories} t={{ ...t, all: dict.common.all }} />
 
             {credits.length ? (
                 <section aria-labelledby="credits-title" className="theme-ivory grain relative">
                     <div className="container-club section-y relative grid gap-10 lg:grid-cols-12 lg:gap-8">
                         <div className="lg:col-span-4">
-                            <SectionLabel>Photography</SectionLabel>
+                            <SectionLabel>{t.creditsLabel}</SectionLabel>
                             <SplitHeading id="credits-title" className="mt-8 text-display-sm font-light">
-                                With thanks to the photographers.
+                                {t.creditsTitle}
                             </SplitHeading>
                             <p className="mt-6 max-w-[36ch] text-sm">
-                                Club photographs are by members and guests. Additional photographs are used under the Unsplash and Pexels licences.
+                                {t.creditsBody}
                             </p>
                         </div>
                         <ul className="border-t border-line lg:col-span-7 lg:col-start-6">

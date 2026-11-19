@@ -15,20 +15,22 @@ import { Field, inputClass } from "@/components/forms/Field";
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const PHONE = /^\+?[0-9\s-]{7,20}$/;
 
-function validate(fd) {
+function validate(fd, msg) {
     const e = {};
     const name = String(fd.get("fullName") ?? "").trim();
-    if (name.length < 2) e.fullName = "Please enter your full name.";
-    if (!EMAIL.test(String(fd.get("email") ?? "").trim())) e.email = "Please enter a valid email address.";
-    if (!PHONE.test(String(fd.get("phone") ?? "").trim())) e.phone = "Please enter a phone number, including country code.";
-    if (!fd.get("nationality")) e.nationality = "Please choose one.";
-    if (!fd.get("category")) e.category = "Please choose a membership category.";
-    if (String(fd.get("message") ?? "").length > 1000) e.message = "Please keep this under 1,000 characters.";
-    if (!fd.get("consent")) e.consent = "Please confirm so we can process your application.";
+    if (name.length < 2) e.fullName = msg.fullName;
+    if (!EMAIL.test(String(fd.get("email") ?? "").trim())) e.email = msg.email;
+    if (!PHONE.test(String(fd.get("phone") ?? "").trim())) e.phone = msg.phone;
+    if (!fd.get("nationality")) e.nationality = msg.nationality;
+    if (!fd.get("category")) e.category = msg.category;
+    if (String(fd.get("message") ?? "").length > 1000) e.message = msg.message;
+    if (!fd.get("consent")) e.consent = msg.consent;
     return e;
 }
 
-export default function ApplicationForm({ data, categories }) {
+/** `t`: dictionary.forms (labels, hints, errors) + `choose`/`sending` from dictionary.common. */
+export default function ApplicationForm({ data, categories, t }) {
+    const f = t.application;
     const uid = useId();
     const formRef = useRef(null);
     const [errors, setErrors] = useState({});
@@ -46,7 +48,7 @@ export default function ApplicationForm({ data, categories }) {
         event.preventDefault();
         const fd = new FormData(event.currentTarget);
         if (fd.get("website")) return; // honeypot
-        const found = validate(fd);
+        const found = validate(fd, f.errors);
         setErrors(found);
         const first = Object.keys(found)[0];
         if (first) {
@@ -62,7 +64,7 @@ export default function ApplicationForm({ data, categories }) {
     if (status === "sent") {
         return (
             <div role="status" className="border-t border-line pt-10">
-                <p className="text-label uppercase tracking-label text-accent">Received</p>
+                <p className="text-label uppercase tracking-label text-accent">{f.received}</p>
                 <p className="mt-6 font-display text-display-sm font-light">{data.successTitle}</p>
                 <p className="mt-4">{data.successBody}</p>
             </div>
@@ -74,54 +76,56 @@ export default function ApplicationForm({ data, categories }) {
             {/* Honeypot: hidden from people, filled by bots */}
             <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
                 <label>
-                    Website
+                    {t.honeypot}
                     <input type="text" name="website" tabIndex={-1} autoComplete="off" />
                 </label>
             </div>
 
-            <Field id={id("fullName")} label="Full name" required error={errors.fullName}>
+            <Field id={id("fullName")} label={f.fullName} required error={errors.fullName}>
                 <input {...a11y("fullName")} type="text" autoComplete="name" maxLength={100} className={inputClass} />
             </Field>
-            <Field id={id("company")} label="Company">
+            <Field id={id("company")} label={f.company}>
                 <input {...a11y("company")} type="text" autoComplete="organization" maxLength={120} className={inputClass} />
             </Field>
-            <Field id={id("designation")} label="Designation">
+            <Field id={id("designation")} label={f.designation}>
                 <input {...a11y("designation")} type="text" autoComplete="organization-title" maxLength={80} className={inputClass} />
             </Field>
-            <Field id={id("email")} label="Email" required error={errors.email}>
+            <Field id={id("email")} label={f.email} required error={errors.email}>
                 <input {...a11y("email")} type="email" autoComplete="email" maxLength={160} className={inputClass} />
             </Field>
-            <Field id={id("phone")} label="Phone" required error={errors.phone} hint="Include the country code, e.g. +880 or +82.">
+            <Field id={id("phone")} label={f.phone} required error={errors.phone} hint={f.phoneHint}>
                 <input {...a11y("phone", true)} type="tel" autoComplete="tel" maxLength={20} className={inputClass} />
             </Field>
-            <Field id={id("nationality")} label="Nationality" required error={errors.nationality}>
+            <Field id={id("nationality")} label={f.nationality} required error={errors.nationality}>
                 <Select
                     id={id("nationality")}
                     name="nationality"
+                    placeholder={t.choose}
                     labelId={`${id("nationality")}-label`}
                     invalid={Boolean(errors.nationality)}
                     describedBy={errors.nationality ? `${id("nationality")}-error` : undefined}
                     options={[
-                        { value: "bangladeshi", label: "Bangladeshi" },
-                        { value: "korean", label: "Korean" },
-                        { value: "other", label: "Other" },
+                        { value: "bangladeshi", label: f.nationalities.bangladeshi },
+                        { value: "korean", label: f.nationalities.korean },
+                        { value: "other", label: f.nationalities.other },
                     ]}
                 />
             </Field>
-            <Field id={id("category")} label="Membership category" required error={errors.category}>
+            <Field id={id("category")} label={f.category} required error={errors.category}>
                 <Select
                     id={id("category")}
                     name="category"
+                    placeholder={t.choose}
                     labelId={`${id("category")}-label`}
                     invalid={Boolean(errors.category)}
                     describedBy={errors.category ? `${id("category")}-error` : undefined}
                     options={categories.map((c) => ({ value: c.key, label: c.name }))}
                 />
             </Field>
-            <Field id={id("nominator")} label="Nominating member" hint="Leave blank if you don't know a member yet.">
+            <Field id={id("nominator")} label={f.nominator} hint={f.nominatorHint}>
                 <input {...a11y("nominator", true)} type="text" maxLength={100} className={inputClass} />
             </Field>
-            <Field id={id("message")} label="Anything we should know?" error={errors.message} className="sm:col-span-2">
+            <Field id={id("message")} label={f.message} error={errors.message} className="sm:col-span-2">
                 <textarea {...a11y("message")} rows={4} maxLength={1000} className={`${inputClass} resize-y`} />
             </Field>
 
@@ -149,7 +153,7 @@ export default function ApplicationForm({ data, categories }) {
                     disabled={status === "sending"}
                     className="group inline-flex items-center gap-4 border border-accent px-8 py-4 text-sm uppercase tracking-[0.18em] text-accent transition-colors duration-500 hover:bg-accent hover:text-bg disabled:opacity-60"
                 >
-                    {status === "sending" ? "Sending…" : data.submitLabel}
+                    {status === "sending" ? t.sending : data.submitLabel}
                     <Arrow className="group-hover:translate-x-1" />
                 </button>
             </div>
