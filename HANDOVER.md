@@ -176,15 +176,17 @@ _Last updated: 2026-11-19 · **Phase 1.5** — whole site translated to Korean (
     - Legal Korean text says the English version governs; still needs legal + native review.
 53. **Korean 404:** proxy.js sets request header `x-kbbcc-locale` on `/ko/*`; `app/global-not-found.js` reads it inside `<Suspense>` (English shell, Korean streamed in). `LocaleLink`/`LocaleSwitch` fall back to the URL prefix when there are no route params (global 404). Korean styles use `:lang(ko)` so they also apply to a `lang="ko"` subtree (404 view), not only `<html lang="ko">`.
 
+54. **President is real: Chongwan Park** (Sifat, 2026-11-19) — portrait `leader-portrait-01` (the homepage one). Set in `content/home.js` (leadership), `content/about.js` (committee) and `content/members.js` (office bearers president; replaces the dummy Mahbubur Rahman Chowdhury, who was also removed from the corporate directory, and his stock portrait `member-portrait-08` was deleted so it is not credited). `org`, `country` and `message` are `null` until the club supplies them (UI hides them) — no words are put in his mouth on /members. The homepage quote is still `draft: true` placeholder copy and must be replaced by his real message. Name is in Latin script on /ko until his Hangul spelling is confirmed. The portrait source is 276px, so /members shows it framed at ≤256px (never stretched).
+
 ## Open items (waiting on client/Sifat)
 - **Real member list for `/members`** — office bearers (with ranks), executive committee, directory by category, portraits, and each member's consent to be listed. Everything there now is dummy.
 - **Korean (KO) copy is fully drafted** (Claude): a native Korean speaker (club member) must proofread `content/ko/*` and `lib/i18n/dictionaries/ko.js` before launch. Legal pages also need the club's legal adviser.
 - **Korean web font (step 24g):** Hahmlet ships Hangul but the full file is large (MBs); options: subset Hahmlet to the Hangul actually used, or Pretendard / Noto Sans KR for body. Until then Korean uses OS fonts.
 - Logo as SVG or high-res transparent PNG.
-- Name and title of the person in `leader-portrait-01.jpg`; committee member list.
+- President's real message for the homepage quote, his company/title and Hangul name spelling (name + portrait confirmed: Chongwan Park). Rest of the committee list still needed.
 - Original high-res photos (not WhatsApp-compressed), especially the club space at Rupayan Millennium Square.
 - Club phone, email and social links (`content/site.js` has them as `null`).
-- **Draft copy to confirm/replace** (`draft: true` in `content/home.js`): the featured event (12 Dec 2026, Winter Session), membership tiers, the President's quote, two clubhouse space descriptions. President's name is `null` (UI shows the role only).
+- **Draft copy to confirm/replace** (`draft: true` in `content/home.js`): the featured event (12 Dec 2026, Winter Session), membership tiers, the President's quote, two clubhouse space descriptions.
 - Committee names (About page shows "To be confirmed"), real event calendar, tier fees, membership process — all `draft: true`.
 - Logo is a raster cut-out (324px). Ask the club for the SVG / original artwork for crisp large sizes.
 

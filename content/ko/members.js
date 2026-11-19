@@ -16,11 +16,8 @@ export const membersKo = {
         label: "임원진",
         title: "테이블을 준비하도록 선출된 사람들.",
         term: "운영위원회 · 2025–2027",
-        president: {
-            role: "회장",
-            org: "Nilgiri Knit Composite Ltd. 회장",
-            message: "두 나라 사이의 모든 파트너십은 한 번의 소개에서 시작되었습니다. 클럽은 그다음 소개를 더 쉽게 만들기 위해 존재합니다.",
-        },
+        // Name stays in Latin script until the President's Hangul spelling is confirmed.
+        president: { role: "회장" },
         officers: [
             { name: "김재원", role: "수석 부회장", org: "한빛텍스타일 방글라데시 대표이사" },
             { role: "부회장", org: "Bokul Agro Foods 이사" },
@@ -73,7 +70,6 @@ export const membersKo = {
                 label: "기업 회원",
                 items: [
                     { name: "한빛텍스타일 방글라데시", org: "대표: 김재원" },
-                    { org: "대표: Mahbubur Rahman Chowdhury" },
                     { name: "하늘전자 BD", org: "대표: 한지수" },
                     { org: "대표: Md. Rafiqul Islam" },
                 ],

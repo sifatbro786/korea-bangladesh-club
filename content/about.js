@@ -42,7 +42,7 @@ export const about = {
         draft: true,
         note: "Committee names and portraits will be published once confirmed by the club.",
         members: [
-            { role: "President", name: null, image: "leader-portrait-01" },
+            { role: "President", name: "Chongwan Park", image: "leader-portrait-01" },
             { role: "Vice President (Korea)", name: null },
             { role: "Vice President (Bangladesh)", name: null },
             { role: "General Secretary", name: null },

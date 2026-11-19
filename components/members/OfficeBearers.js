@@ -25,20 +25,24 @@ export default function OfficeBearers({ data }) {
             </div>
 
             {/* President */}
-            <article aria-labelledby="president-name" className="mt-16 grid gap-12 md:mt-24 md:grid-cols-12 md:gap-8">
-                <Reveal variant="clip" className="md:col-span-5">
-                    <div className="frame-lattice aspect-[4/5]">
-                        <ClubImage media={president.image} sizes="(min-width: 768px) 40vw, 100vw" />
+            {/* The real portrait is small (276px): shown framed at ≤256px, never stretched to a column. */}
+            <article
+                aria-labelledby="president-name"
+                className="mt-16 grid gap-10 border-y border-line py-12 md:mt-24 md:grid-cols-12 md:items-end md:gap-8 md:py-16"
+            >
+                <Reveal variant="clip" className="md:col-span-4 lg:col-span-3">
+                    <div className="frame-lattice aspect-[276/283] w-56 sm:w-64">
+                        <ClubImage media={president.image} sizes="256px" />
                     </div>
                 </Reveal>
 
-                <div className="flex flex-col justify-end md:col-span-6 md:col-start-7 md:pb-4">
+                <div className="flex flex-col justify-end md:col-span-8 md:col-start-5 md:pb-4 lg:col-start-4">
                     <Reveal>
                         <p className="text-label uppercase tracking-label text-accent">{president.role}</p>
                         <h3 id="president-name" className="mt-4 font-display text-display-md font-light">
                             {president.name}
                         </h3>
-                        <p className="mt-4 text-heading/80">{president.org}</p>
+                        {president.org ? <p className="mt-4 text-heading/80">{president.org}</p> : null}
                         <Country code={president.country} className="mt-4" />
                     </Reveal>
                     {president.message ? (

@@ -25,14 +25,14 @@ export const members = {
         label: "Office bearers",
         title: "Elected to keep the table set.",
         term: "Executive Committee · 2025–2027",
+        // REAL (Sifat, 2026-11-19): name + portrait confirmed. Org, country and a message only when the club supplies them.
         president: {
-            name: "Mahbubur Rahman Chowdhury",
+            name: "Chongwan Park",
             role: "President",
-            org: "Chairman, Nilgiri Knit Composite Ltd.",
-            country: "bd",
-            image: "member-portrait-08",
-            message:
-                "Every partnership between our two countries started with one introduction. The club exists to make the next one easier.",
+            org: null,
+            country: null,
+            image: "leader-portrait-01",
+            message: null,
         },
         officers: [
             { rank: 2, name: "Kim Jae-won", role: "Senior Vice President", org: "Managing Director, Hanbit Textiles Bangladesh", country: "kr", image: "member-portrait-03" },
@@ -91,7 +91,6 @@ export const members = {
                 label: "Corporate members",
                 items: [
                     { name: "Hanbit Textiles Bangladesh", org: "Represented by Kim Jae-won", country: "kr", since: 2017 },
-                    { name: "Nilgiri Knit Composite Ltd.", org: "Represented by Mahbubur Rahman Chowdhury", country: "bd", since: 2017 },
                     { name: "Haneul Electronics BD", org: "Represented by Han Ji-soo", country: "kr", since: 2020 },
                     { name: "Rupsha Shipping Lines", org: "Represented by Md. Rafiqul Islam", country: "bd", since: 2022 },
                 ],

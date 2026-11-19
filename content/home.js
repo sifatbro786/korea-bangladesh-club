@@ -101,7 +101,7 @@ export const home = {
         label: "From the President",
         draft: true,
         quote: "When a Korean investor and a Bangladeshi entrepreneur sit at the same table, both countries move forward. Our club exists to set that table — and to make everyone who sits at it feel welcome.",
-        name: null, // waiting on the club
+        name: "Chongwan Park", // confirmed by Sifat 2026-11-19
         role: "President, KBBCC",
         image: "leader-portrait-01",
         link: { label: "Meet the committee", href: "/about#committee" },

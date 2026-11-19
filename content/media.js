@@ -156,7 +156,7 @@ export const media = {
     "leader-portrait-01": {
         id: "leader-portrait-01",
         src: "/images/club/leader-portrait-01.jpg",
-        alt: "Portrait of a club leader",
+        alt: "Portrait of Chongwan Park, President of KBBCC",
         width: 276,
         height: 283,
         objectPosition: "center 30%",
@@ -406,17 +406,6 @@ export const media = {
         grade: "soft",
         source: "unsplash",
         credit: { name: "Ernest Flowers", url: "https://unsplash.com/@ernestflowerss" },
-    },
-    "member-portrait-08": {
-        id: "member-portrait-08",
-        src: unsplashSrc("photo-1683105653852-25028a53a3e4"),
-        alt: "A bearded man with glasses in a maroon kurta beside a lamp",
-        width: 1600,
-        height: 2000,
-        objectPosition: "center 25%",
-        grade: "soft",
-        source: "unsplash",
-        credit: { name: "Kazi Mizan", url: "https://unsplash.com/@kaziminmizan" },
     },
     "member-portrait-09": {
         id: "member-portrait-09",
