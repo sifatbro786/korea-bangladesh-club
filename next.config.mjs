@@ -6,6 +6,10 @@ const nextConfig = {
     cacheComponents: true,
     partialPrefetching: true,
     reactCompiler: true,
+    experimental: {
+        // Root layout is app/[locale] → unmatched URLs need app/global-not-found.js (documented for this case).
+        globalNotFound: true,
+    },
     images: {
         formats: ["image/avif", "image/webp"],
         // Required since Next 16 — only these qualities can be requested.

@@ -1,6 +1,6 @@
 # HANDOVER — KBBCC
 
-_Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y, SEO, Lighthouse) → next: Phase 2 (backend + admin)_
+_Last updated: 2026-11-19 · **Phase 1.5** — step 24a (i18n foundation, EN/KO) done → next: 24b Korean copy for header/footer + homepage_
 
 ## Project snapshot
 - Next.js 16.4.6 (App Router, JS), React 19.3, Tailwind v4.3 (via `@tailwindcss/turbopack`), React Compiler on, `cacheComponents` + `partialPrefetching` on.
@@ -9,8 +9,12 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 - Dependencies added: `lenis` 1.3.27, `gsap` 3.15.1 (exact-pinned).
 
 ## Folder map
-- `app/layout.js` — root: fonts, metadata, loader head script, `<InitialLoader>`, `<SmoothScroll>`
-- `app/(site)/` — public site route group: `layout.js` (skip link, Header, `<main>`, Footer), `page.js` (homepage). Phase 2 admin gets its own group.
+- `app/[locale]/layout.js` — ROOT layout (locale is a root param): `<html lang>`, fonts, metadata (og:locale), loader head script, `<InitialLoader>`, `<SmoothScroll>`; `generateStaticParams` → en + ko
+- `proxy.js` — locale routing (see decision 49) · `app/global-not-found.js` — 404 for unmatched URLs (`experimental.globalNotFound`) · `app/font-config.js` — shared `next/font/local` setup
+- `lib/i18n/config.js` (client-safe: `LOCALES`, `localizePath`, `stripLocale`, cookie name) · `lib/i18n/server.js` (`getLocale()` via `next/root-params`, `getDictionary()`, `localeAlternates(path)`, `deepMerge`) · `lib/i18n/dictionaries/{en,ko}.js` — UI strings
+- `components/i18n/LocaleLink.js` — the ONLY link component (wraps next/link, adds `/ko`) · `components/i18n/LocaleSwitch.js` — EN / KO switch
+- `content/ko/` — Korean overrides per content document (`index.js` registry), merged over English by index/key
+- `app/[locale]/(site)/` — public site route group (all routes below moved under `app/[locale]/` on 2026-11-19; paths in this list are relative to it): `layout.js` (skip link, Header, `<main>`, Footer), `page.js` (homepage). Phase 2 admin gets its own group.
 - `components/layout/` — `Header.js` (server) + `HeaderClient.js` (scroll state, hide-on-scroll, mobile menu dialog), `Footer.js` (marquee, columns, cached year)
 - `components/home/` — one file per homepage section: Hero (+HeroIntro), Intro, Pillars, Clubhouse, Events, Membership, Leadership, Moments (+MomentsTrack), Visit
 - `components/ui/` — `SectionLabel`, `Ornament`, `Arrow`, `ArrowLink` (the only CTA style; no pill buttons)
@@ -20,6 +24,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 - `app/(site)/gallery`, `app/(site)/news`, `app/(site)/news/[slug]`, `app/(site)/contact`, `app/(site)/privacy`, `app/(site)/terms`, `app/not-found.js` (global 404 with site chrome)
 - `content/gallery.js`, `content/news.js` (posts: news | notice, block body), `content/contact.js`, `content/legal.js`
 - `app/sitemap.js`, `app/robots.js` (disallows /dev/), `app/manifest.js`, `app/opengraph-image.js` (default share image, static at build) · `lib/seo.js` (`SITE_URL`, `absoluteUrl`) · `components/seo/JsonLd.js` (Organization on home, Event on event pages, NewsArticle on news pages)
+- `app/(site)/members/` + `components/members/` (`OfficeBearers`, `ExecutiveCommittee`, `Directory`, `Country`) + `content/members.js` (getter: `getMembersPage()`, officers sorted by `rank`)
 - `components/page/` — `PageHero` (inner-page hero; h1 never hidden), `CtaBand`
 - `components/about/`, `components/membership/`, `components/events/` — page sections; `ApplicationForm` + `EventsBrowser` are the client islands
 - `app/(site)/about`, `app/(site)/membership`, `app/(site)/events`, `app/(site)/events/[slug]` (generateStaticParams over all slugs; unknown slug → 404)
@@ -54,6 +59,12 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
   - [x] 1 Header/Nav · [x] 2 Hero (Seoul|Dhaka diptych) · [x] 3 Intro · [x] 4 Pillars (Trade/Investment/Culture) · [x] 5 Clubhouse · [x] 6 Events · [x] 7 Membership band · [x] 8 Leadership · [x] 9 Moments (pinned horizontal) · [x] 10 Visit · [x] 11 Footer
   - [x] 12 About (story, values, committee, CTA) · [x] 13 Membership (benefits, tiers, process, FAQ, application form UI) · [x] 14 Events (filterable list with cursor preview + detail pages) · [x] 15 Gallery (+ Unsplash credits, auto-collected) · [x] 16 News & notices (list + detail) · [x] 17 Contact (form + map facade), Privacy, Terms, custom 404
   - [x] 18 Responsive + a11y pass (axe-core: 0 violations on 10 pages × desktop/mobile; no overflow at 360/768/1024/1920; keyboard + skip link verified) · [x] 19 SEO (sitemap, robots, manifest, OG image, canonicals, JSON-LD) · [x] 20 Lighthouse mobile 90+ (median: home 91, membership 93, event 95; others 89–97; a11y/BP/SEO 100)
+- **Phase 1.5 — Sifat feedback (2026-11-19)**
+  - [x] 21 Hero city labels → "South Korea" / "Bangladesh" (city + coords stay as the sub-line); hero body copy says "South Korea and Bangladesh"
+  - [x] 22 Header wordmark: "KBBCC" text removed, full name as a two-line lockup at all sizes; nav: Membership removed (reached via "Apply for membership" CTA → `/membership`), **Members** added
+  - [x] 23 `/members` page: PageHero · Office bearers (President feature + staggered officer portraits) · Executive committee (ivory ledger) · Member directory (grouped by category, no JS) · CtaBand
+  - [x] 24a i18n foundation (Option A, no dependency — Sifat 2026-11-19): `app/[locale]` root, `proxy.js`, EN/KO switch in header + mobile menu, `LocaleLink`, localized content layer, hreflang + sitemap alternates, global 404, Korean nav labels + header UI strings
+  - [ ] 24b Korean: header/footer strings + homepage copy · [ ] 24c About + Members · [ ] 24d Membership (+ form labels) · [ ] 24e Events + News (collections) · [ ] 24f Gallery, Contact, Legal, 404, page `meta` titles · [ ] 24g Korean web font decision
 - **Phase 2 — Backend + admin dashboard:** MongoDB, auth (JWT/httpOnly), every page's text and images editable, image upload.
 - **Phase 3 — E-commerce:** single-store B2B/B2C, managed by the club, connected to B&F's Kmarket.com.
 
@@ -136,7 +147,27 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
     - Hero kicker ("A private members' club in Dhaka") removed at Sifat's request; `Hero.js` renders a kicker only if content has one.
     - `components/home/HeroRoute.js` is the unused arc experiment — delete it.
 
+45. **Hero city labels are the countries** (Sifat): `city` = "South Korea" / "Bangladesh", `coords` = "Seoul · …" / "Dhaka · …". Field name `city` kept so the data shape doesn't change.
+46. **Header wordmark = full club name** (two lines: "Korea Bangladesh" / "Business & Cultural Club"), "KBBCC" text removed (the acronym is in the emblem). To fit at 1024px, nav gap is `gap-6` and tracking `0.14em` below `xl` (`0.2em` from `xl`). Footer still shows the old KBBCC lockup — not changed.
+47. **Navigation:** no Membership item; the header CTA "Apply for membership" goes to `/membership` (top of page, not `#apply`). "Members" (`/members`) is in the primary nav; footer "The Club" column has "Our members" + "Membership".
+48. **Members page data is DUMMY** (Sifat asked for placeholders): every name/company in `content/members.js` is invented and marked `draft: true`; portraits are 13 Unsplash stock photos (`member-portrait-01…13`, credits auto-listed on Gallery). This is the one exception to decision 5 — must be replaced by the club's real list before launch. Directory is grouped by category (founding / life / corporate / general); Phase 2 → `members` collection with `rank`, `category`, `country`, `since`, `image`, `published`.
+
+49. **i18n = Option A, no library** (Sifat, 2026-11-19), following Next 16's own i18n guide:
+    - URLs: English unprefixed (`/about`), Korean `/ko/about`. `proxy.js`: `/en/*` → 308 to unprefixed; `/ko/*` served; unprefixed → 307 to `/ko/*` if cookie `kbbcc-locale=ko`, else rewritten to `/en/*`. No Accept-Language sniffing (crawlers + first visit = English).
+    - Locale is read with `next/root-params` (`getLocale()`), so content getters/components need no prop drilling. Getters take an optional `locale`; route handlers (sitemap) must pass it — root params don't work there.
+    - Korean content = partial overrides in `content/ko/*` merged over English (arrays by INDEX — keep order identical; hrefs/media ids come from English). Missing keys show English. Phase 2: a `ko` field per document.
+    - Always import `Link` from `@/components/i18n/LocaleLink` (never `next/link`) and keep hrefs locale-free in content.
+    - `stripLocale` also strips `/en`: on rewritten English pages `usePathname()` returns `/en/...` during prerender (bug found + fixed: switch linked to `/ko/en/members`).
+    - Switch = plain `<a hreflang>` links (crawlable, no JS needed) + cookie on click; full page load because `<html lang>` changes.
+    - Page metadata: `generateMetadata` → `alternates: await localeAlternates("/path")` (canonical per locale + hreflang en/ko/x-default). Sitemap lists every URL in both languages with alternates.
+    - Korean type: Hangul falls back to OS Korean faces (stacks in `@theme`); `html:lang(ko)` → `word-break: keep-all`, and all `tracking-*` utilities drop to 0.02em on Korean pages.
+50. **404s:** unmatched URLs → `app/global-not-found.js` (English chrome; real 404 status + full HTML). `notFound()` inside pages → `app/[locale]/not-found.js`. Both render `components/page/NotFoundView.js`. `Header`/`Footer` accept an optional `locale` prop for this case. A catch-all `[...rest]` route was tried first and rejected: under cacheComponents it served an empty error shell.
+51. Header CTA has `shortLabel` ("Apply" / "가입 신청") shown only between `lg` and `xl`, where the nav + language switch leave no room.
+
 ## Open items (waiting on client/Sifat)
+- **Real member list for `/members`** — office bearers (with ranks), executive committee, directory by category, portraits, and each member's consent to be listed. Everything there now is dummy.
+- **Korean (KO) copy:** Claude drafts it step by step; a native Korean speaker (club member) must proofread before launch. All Korean files are marked DRAFT.
+- **Korean web font (step 24g):** Hahmlet ships Hangul but the full file is large (MBs); options: subset Hahmlet to the Hangul actually used, or Pretendard / Noto Sans KR for body. Until then Korean uses OS fonts.
 - Logo as SVG or high-res transparent PNG.
 - Name and title of the person in `leader-portrait-01.jpg`; committee member list.
 - Original high-res photos (not WhatsApp-compressed), especially the club space at Rupayan Millennium Square.
@@ -153,6 +184,7 @@ _Last updated: 2026-11-17 · **Phase 1 complete** (steps 1–20: all pages, a11y
 - Deployment target (STR VPS or client's Hostinger) and the domain → `SITE_URL`.
 
 ## Known caveats
+- Unknown event/news slugs (`/events/xyz`) stream the not-found UI with status 200 (Partial Prerender fallback) — pre-existing Next behaviour, not caused by i18n. Fine for now; revisit with Phase 2 data.
 - `.next/kbbcc-src.tgz` is a throwaway source snapshot used for browser testing; it is inside the gitignored build folder and disappears on the next `next build`/clean.
 - Lockfile was edited surgically to add only gsap + lenis (a Linux npm 10 would drop the `libc` fields your Windows npm writes). Run `npm install` once on Windows to confirm it is a no-op.
 - `node_modules` was installed on Windows; build/lint must be run on Sifat's machine (`npm run build`, `npm run lint`).

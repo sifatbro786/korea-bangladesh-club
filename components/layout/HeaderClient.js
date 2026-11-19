@@ -1,19 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/i18n/LocaleLink";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { setScrollLock } from "@/lib/motion/runtime";
+import LocaleSwitch from "@/components/i18n/LocaleSwitch";
 import Arrow from "@/components/ui/Arrow";
+import { stripLocale } from "@/lib/i18n/config";
 
 const SOLID_AFTER = 24; // px scrolled before the header gets a background
 const HIDE_AFTER = 480; // px scrolled before hide-on-scroll-down kicks in
 const DIRECTION_PX = 12; // continuous px in one direction before hiding/showing
 
-function Wordmark({ logo, compact }) {
+function Wordmark({ logo, compact, homeLabel }) {
     return (
-        <Link href="/" className="group flex items-center gap-4">
+        <Link href="/" className="group flex min-w-0 items-center gap-3 sm:gap-4">
             {logo ? (
                 <Image
                     src={logo.src}
@@ -25,17 +27,20 @@ function Wordmark({ logo, compact }) {
                     className={`h-auto shrink-0 transition-[width] duration-500 ease-club ${compact ? "w-10" : "w-12"}`}
                 />
             ) : null}
-            <span className="font-display text-[1.75rem] leading-none tracking-[0.18em] text-heading">KBBCC</span>
-            <span aria-hidden="true" className="hidden h-7 w-px bg-line xl:block" />
-            <span className="hidden max-w-[12rem] text-[0.8125rem] leading-snug text-heading/80 xl:block">
-                Korea Bangladesh Business &amp; Cultural Club
+            {/* Full club name as the wordmark (the "KBBCC" acronym is already in the emblem).
+                Two fixed lines so it reads as a lockup, not a wrapped sentence. */}
+            <span className="flex flex-col leading-[1.15]">
+                <span className="text-[0.9375rem] font-medium tracking-[0.01em] text-heading sm:text-base">Korea Bangladesh</span>
+                <span className="text-[0.8125rem] tracking-[0.01em] text-heading/70 sm:text-[0.875rem]">
+                    Business &amp; Cultural Club
+                </span>
             </span>
-            <span className="sr-only">, home</span>
+            <span className="sr-only">, {homeLabel}</span>
         </Link>
     );
 }
 
-export default function HeaderClient({ items, cta, logo }) {
+export default function HeaderClient({ items, cta, logo, t }) {
     const pathname = usePathname();
     const [solid, setSolid] = useState(false);
     const [hidden, setHidden] = useState(false);
@@ -101,7 +106,9 @@ export default function HeaderClient({ items, cta, logo }) {
         };
     }, [open]);
 
-    const isActive = (href) => pathname === href || pathname.startsWith(`${href}/`);
+    // Compare without the locale prefix: "/ko/about" is active for the "/about" item.
+    const current = stripLocale(pathname ?? "/");
+    const isActive = (href) => current === href || current.startsWith(`${href}/`);
 
     return (
         <>
@@ -111,17 +118,17 @@ export default function HeaderClient({ items, cta, logo }) {
                     solid ? "h-16 border-line bg-bg/92" : "h-20 border-transparent bg-transparent"
                 }`}
             >
-                <div className="container-club flex h-full items-center justify-between gap-8">
-                    <Wordmark logo={logo} compact={solid} />
+                <div className="container-club flex h-full items-center justify-between gap-6 xl:gap-8">
+                    <Wordmark logo={logo} compact={solid} homeLabel={t.a11y.home} />
 
-                    <nav aria-label="Primary" className="hidden lg:block">
-                        <ul className="flex items-center gap-9">
+                    <nav aria-label={t.a11y.primaryNav} className="hidden lg:block">
+                        <ul className="flex items-center gap-6 xl:gap-9">
                             {items.map((item) => (
                                 <li key={item.href}>
                                     <Link
                                         href={item.href}
                                         aria-current={isActive(item.href) ? "page" : undefined}
-                                        className={`text-[0.75rem] uppercase tracking-[0.2em] transition-colors duration-300 hover:text-accent ${
+                                        className={`text-[0.75rem] uppercase tracking-[0.14em] transition-colors duration-300 hover:text-accent xl:tracking-[0.2em] ${
                                             isActive(item.href) ? "text-accent" : "text-heading/80"
                                         }`}
                                     >
@@ -132,12 +139,23 @@ export default function HeaderClient({ items, cta, logo }) {
                         </ul>
                     </nav>
 
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-5 xl:gap-6">
+                        <LocaleSwitch label={t.a11y.language} className="hidden sm:block" />
                         <Link
                             href={cta.href}
-                            className="group hidden items-center gap-2 text-[0.75rem] uppercase tracking-[0.2em] text-accent sm:inline-flex"
+                            className="group hidden items-center gap-2 text-[0.75rem] uppercase tracking-[0.14em] text-accent sm:inline-flex xl:tracking-[0.2em]"
                         >
-                            <span className="link-line">{cta.label}</span>
+                            <span className="link-line">
+                                {/* Short label between lg and xl, where the full nav + switch leave no room. */}
+                                {cta.shortLabel ? (
+                                    <>
+                                        <span className="lg:hidden xl:inline">{cta.label}</span>
+                                        <span className="hidden lg:inline xl:hidden">{cta.shortLabel}</span>
+                                    </>
+                                ) : (
+                                    cta.label
+                                )}
+                            </span>
                             <Arrow className="group-hover:translate-x-1" />
                         </Link>
 
@@ -149,7 +167,7 @@ export default function HeaderClient({ items, cta, logo }) {
                             aria-controls="mobile-menu"
                             className="flex items-center gap-3 py-2 text-[0.75rem] uppercase tracking-[0.2em] text-heading lg:hidden"
                         >
-                            <span>{open ? "Close" : "Menu"}</span>
+                            <span>{open ? t.close : t.menu}</span>
                             <span aria-hidden="true" className="flex w-6 flex-col gap-[5px]">
                                 <span className={`h-px w-full bg-current transition-transform duration-500 ease-club ${open ? "translate-y-[3px] rotate-45" : ""}`} />
                                 <span className={`h-px w-full bg-current transition-transform duration-500 ease-club ${open ? "-translate-y-[3px] -rotate-45" : ""}`} />
@@ -164,11 +182,11 @@ export default function HeaderClient({ items, cta, logo }) {
                 ref={menuRef}
                 role="dialog"
                 aria-modal="true"
-                aria-label="Menu"
+                aria-label={t.a11y.menu}
                 data-open={open ? "true" : "false"}
                 className="mobile-menu grain fixed inset-0 z-40 flex flex-col bg-bg pt-28 lg:hidden"
             >
-                <nav aria-label="Mobile" className="container-club flex-1">
+                <nav aria-label={t.a11y.mobileNav} className="container-club flex-1">
                     <ol className="border-t border-line">
                         {items.map((item, i) => (
                             <li key={item.href} className="border-b border-line">
@@ -194,9 +212,10 @@ export default function HeaderClient({ items, cta, logo }) {
                         <Arrow className="group-hover:translate-x-1" />
                     </Link>
                 </nav>
-                <p className="container-club pb-8 text-label uppercase tracking-label text-muted">
-                    Uttar Badda, Dhaka
-                </p>
+                <div className="container-club flex flex-wrap items-center justify-between gap-4 border-t border-line pb-8 pt-4">
+                    <LocaleSwitch label={t.a11y.language} variant="menu" />
+                    <p className="text-label uppercase tracking-label text-muted">{t.location}</p>
+                </div>
             </div>
         </>
     );

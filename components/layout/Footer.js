@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/i18n/LocaleLink";
 import { cacheLife } from "next/cache";
 import { getNavigation, getSiteSettings } from "@/lib/content";
 import Marquee from "@/components/motion/Marquee";
@@ -42,8 +42,8 @@ function FooterColumn({ title, links }) {
     );
 }
 
-export default async function Footer() {
-    const [site, navigation, year] = await Promise.all([getSiteSettings(), getNavigation(), getYear()]);
+export default async function Footer({ locale } = {}) {
+    const [site, navigation, year] = await Promise.all([getSiteSettings(locale), getNavigation(locale), getYear()]);
     const { address } = site;
 
     return (

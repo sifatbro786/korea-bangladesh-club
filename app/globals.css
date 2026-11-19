@@ -51,8 +51,10 @@
 }
 
 @theme inline {
-    --font-display: var(--font-hahmlet), Georgia, serif;
-    --font-sans: var(--font-google-sans), system-ui, sans-serif;
+    /* Hangul: the self-hosted files are latin-only, so Korean falls through to the OS Korean faces
+       (macOS/iOS: AppleMyungjo / Apple SD Gothic Neo · Windows: Batang / Malgun Gothic · Android: Noto). */
+    --font-display: var(--font-hahmlet), Georgia, "AppleMyungjo", "Nanum Myeongjo", "Noto Serif KR", "Batang", serif;
+    --font-sans: var(--font-google-sans), system-ui, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
 }
 
 @layer base {
@@ -61,6 +63,12 @@
         color-scheme: dark;
         /* Neither font ships an italic in this build: never let the browser fake one. */
         font-synthesis-style: none;
+    }
+
+    /* Korean: break between words (eojeol), never inside one; tighter display tracking reads odd in Hangul. */
+    html:lang(ko) {
+        word-break: keep-all;
+        overflow-wrap: anywhere;
     }
 
     body {
@@ -702,4 +710,11 @@ html.menu-open {
     line-height: 1.4;
     letter-spacing: 0.01em;
     text-transform: none;
+}
+
+/* ───────────────────────── Korean ───────────────────────── */
+/* Wide tracking (labels, nav, CTAs) is a Latin small-caps device; on Hangul it splits syllables
+   apart ("회 원 가 입"). Unlayered on purpose so it wins over the tracking utilities. */
+html:lang(ko) [class*="tracking-"] {
+    letter-spacing: 0.02em;
 }
